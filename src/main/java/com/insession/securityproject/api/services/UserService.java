@@ -1,7 +1,19 @@
 package com.insession.securityproject.api.services;
 
+import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.User;
 
 public class UserService implements IUserService {
-    // insane code
+    private final IUserRepository repository;
+
+    public UserService(IUserRepository repository) {
+        this.repository = repository;
+    }
+
+    // Only used to give example of testing the services
+    @Override
+    public User someMethod(String username) {
+        return repository.someMethod(username);
+    }
 }
