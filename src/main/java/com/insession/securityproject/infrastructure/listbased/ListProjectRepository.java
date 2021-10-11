@@ -7,9 +7,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ListProjectRepository implements IProductRepository {
+    private static ListProjectRepository instance;
+
+    // Singleton used to always have the same items
+    public static ListProjectRepository getInstance() {
+        if (instance == null)
+            instance = new ListProjectRepository();
+        return instance;
+    }
+
     private final List<Product> products;
 
-    public ListProjectRepository() {
+    private ListProjectRepository() {
         products = initializeProducts();
     }
 

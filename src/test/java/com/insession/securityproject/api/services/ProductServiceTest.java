@@ -15,7 +15,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService(new ListProjectRepository());
+        productService = new ProductService(ListProjectRepository.getInstance());
     }
 
     @Test
