@@ -20,6 +20,7 @@ public class Navbar {
         items.add(new Item("Login", "/login", UserRole.USER));
         items.add(new Item("Admin", "/admin", UserRole.ADMIN));
         items.add(new Item("Profile", "/profile", UserRole.USER));
+        items.add(new Item("Products", "/products", UserRole.USER));
         return items;
     }
 
