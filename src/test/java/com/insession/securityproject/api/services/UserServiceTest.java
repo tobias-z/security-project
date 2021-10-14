@@ -19,7 +19,8 @@ class UserServiceTest {
     @Test
     void someMethod() {
         String username = "bob";
-        User user =userService.someMethod(username);
+        String userEmail="jhf@gmial.com";
+        User user =userService.someMethod(username,userEmail);
         assertEquals(username, user.getUsername());
     }
 }
