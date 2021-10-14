@@ -36,7 +36,7 @@ public class UserEntity {
     }
 
     public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
     }
 
     public String getPassword() {
@@ -47,7 +47,4 @@ public class UserEntity {
         return userName;
     }
 
-    public boolean verifyPassword(String pw){
-        return BCrypt.checkpw(pw, password);
-    }
 }

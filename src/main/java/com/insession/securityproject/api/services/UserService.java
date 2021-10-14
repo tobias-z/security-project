@@ -16,4 +16,15 @@ public class UserService implements IUserService {
     public User someMethod(String username) {
         return repository.someMethod(username);
     }
+
+    @Override
+    public User login(String username, String password) throws Exception {
+        User user = repository.getUserByUserName(username);
+        if (!user.verifyPassword(password)) {
+            throw new Exception("Not valid login");
+        }
+        return user;
+    }
+
+
 }

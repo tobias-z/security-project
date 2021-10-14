@@ -7,6 +7,11 @@ import com.insession.securityproject.domain.user.UserRole;
 public class MockUserService implements IUserService {
     @Override
     public User someMethod(String username) {
-        return new User(username, UserRole.USER);
+        return new User(username, UserRole.USER, "string");
+    }
+
+    @Override
+    public User login(String username, String password) {
+        return null;
     }
 }

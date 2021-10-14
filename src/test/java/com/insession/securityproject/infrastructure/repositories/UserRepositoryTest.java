@@ -17,7 +17,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new UserRepository();
+        repository = new UserRepository(emf);
         emf = Persistence.createEntityManagerFactory("puTest");
         // Do some creating of test users
     }

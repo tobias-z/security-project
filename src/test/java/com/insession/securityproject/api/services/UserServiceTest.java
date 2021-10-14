@@ -1,5 +1,6 @@
 package com.insession.securityproject.api.services;
 
+import com.insession.securityproject.api.mocks.MockUserRepository;
 import com.insession.securityproject.api.mocks.MockUserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
@@ -13,7 +14,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new MockUserService();
+        userService = new UserService(new MockUserRepository());
     }
 
     @Test
