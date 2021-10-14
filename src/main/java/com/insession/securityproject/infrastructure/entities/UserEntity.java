@@ -43,6 +43,10 @@ public class UserEntity {
         return password;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
     public boolean verifyPassword(String pw){
         return BCrypt.checkpw(pw, password);
     }
