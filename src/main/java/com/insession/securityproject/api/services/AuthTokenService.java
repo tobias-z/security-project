@@ -44,6 +44,7 @@ public class AuthTokenService {
 
     private void removeToken(String key, Integer value) {
         synchronized (tokens) {
+            if (!tokens.containsKey(key)) return;
             boolean isSameToken = tokens.get(key).equals(value);
             if (isSameToken)
                 tokens.remove(key);
