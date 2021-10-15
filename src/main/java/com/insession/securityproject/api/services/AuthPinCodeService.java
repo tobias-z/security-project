@@ -19,7 +19,7 @@ public class AuthPinCodeService {
         pinCodes = new HashMap<>();
     }
 
-    public Integer getNewToken(String username) {
+    public Integer getNewPinCode(String username) {
         int pinCode = getRandomPinCode(100000, 999999);
         addPinCode(username, pinCode);
         Thread thread = new Thread(startInvalidation(username, pinCode));
@@ -27,10 +27,10 @@ public class AuthPinCodeService {
         return pinCode;
     }
 
-    public boolean isValidToken(String username, Integer token) {
+    public boolean isValidPinCode(String username, Integer pinCode) {
         synchronized (pinCodes) {
             Integer thePinCode = pinCodes.get(username);
-            if (thePinCode == null || !thePinCode.equals(token)) return false;
+            if (thePinCode == null || !thePinCode.equals(pinCode)) return false;
             removePinCode(username, thePinCode);
             return true;
         }

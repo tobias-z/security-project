@@ -18,8 +18,8 @@ class AuthPinCodeServiceTest {
     @DisplayName("auth token works")
     void authTokenWorks() throws Exception {
         String username = "bob";
-        Integer token = authTokenService.getNewToken(username);
+        Integer token = authTokenService.getNewPinCode(username);
         assertNotNull(token);
-        assertTrue(authTokenService.isValidToken(username, token));
+        assertTrue(authTokenService.isValidPinCode(username, token));
     }
 }
