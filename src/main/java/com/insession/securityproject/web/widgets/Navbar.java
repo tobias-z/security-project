@@ -60,5 +60,9 @@ public class Navbar {
         public UserRole getRole() {
             return role;
         }
+
+        public boolean isActive() {
+            return request.getRequestURI().endsWith(url);
+        }
     }
 }
