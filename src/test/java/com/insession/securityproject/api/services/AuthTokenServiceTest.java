@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AuthTokenServiceTest {
-    private static AuthTokenService authTokenService;
+    private static AuthPinCodeService authTokenService;
 
     @BeforeEach
     void setUp() {
-        authTokenService = AuthTokenService.getInstance();
+        authTokenService = AuthPinCodeService.getInstance();
     }
 
     @Test
