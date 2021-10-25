@@ -1,7 +1,7 @@
 package com.insession.securityproject.domain.user;
 
+import com.insession.securityproject.infrastructure.entities.UserEntity;
+
 public interface IUserRepository {
-    User someMethod(String username,String userEmail);
-
-
+    UserEntity getUserByUserName(String username) throws UserNotFoundException;
 }

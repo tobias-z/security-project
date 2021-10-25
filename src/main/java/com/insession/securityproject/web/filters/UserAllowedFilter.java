@@ -31,12 +31,15 @@ public class UserAllowedFilter {
         // This should be username not user
         UserRole userRole = (UserRole) session.getAttribute("role");
 
-        if (userRole == null && roleAllowed.equals(UserRole.NO_USER)) {
+        if (userRole == null) {
+            sendError(404, "Please stop brute brute forcing us :)");
+        }
+
+        if (roleAllowed.equals(UserRole.NO_USER)) {
             return;
         }
 
-        // Do db call with username instead
-        if (userRole == null || !userRole.equals(roleAllowed)) {
+        if (!userRole.equals(roleAllowed)) {
             sendError(401, "You are not allowed on that page");
         }
     }

@@ -19,12 +19,19 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "email")
+    private String email;
 
     public UserEntity() {}
 
-    public UserEntity(String userName, String password) {
+    public UserEntity(String userName, String password, String email) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
         this.userName = userName;
+        this.email = email;
+    }
+
+    public boolean verifyPassword(String pw){
+        return BCrypt.checkpw(pw, password);
     }
 
     public Long getId() {
@@ -47,4 +54,15 @@ public class UserEntity {
         return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

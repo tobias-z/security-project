@@ -3,6 +3,7 @@ package com.insession.securityproject.api.services;
 import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
+import com.insession.securityproject.infrastructure.entities.UserEntity;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -17,11 +18,6 @@ public class UserService implements IUserService {
     }
 
     // Only used to give example of testing the services
-    @Override
-    public User someMethod(String username,String userEmail) {
-        return repository.someMethod(username,userEmail);
-    }
-
 
     @Override
     public void sendPinMail( User user) {
@@ -95,11 +91,11 @@ public class UserService implements IUserService {
 
     @Override
     public User login(String username, String password) throws Exception {
-        User user = repository.getUserByUserName(username);
+        UserEntity user = repository.getUserByUserName(username);
         if (!user.verifyPassword(password)) {
             throw new Exception("Not valid login");
         }
-        return user;
+        return new User(user);
     }
 
 

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public abstract class RootServlet extends HttpServlet implements IRoute {
 
@@ -29,6 +30,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
             throws ServletException, IOException {
         init();
 
+        setRoleIfNotLoggedIN(req);
         new UserAllowedFilter(this.roleAllowed, req, resp).doFilter();
 
         String route = loader(req, resp);
@@ -42,9 +44,17 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         req.getRequestDispatcher("/WEB-INF/root.jsp").forward(req, resp);
     }
 
+    private void setRoleIfNotLoggedIN(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        if (session.getAttribute("role") == null) {
+            session.setAttribute("role", UserRole.NO_USER);
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        new UserAllowedFilter(this.roleAllowed, req, resp).doFilter();
         String redirectPath = action(req, resp);
         resp.sendRedirect(req.getContextPath() + redirectPath);
     }

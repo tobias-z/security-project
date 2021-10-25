@@ -16,6 +16,6 @@
         <button type="submit" class="btn btn-primary">Sign in</button>
     </div>
 
-    <c:if test="${requestScope.loginError}">${requestScope.loginError}</c:if>
+    <c:if test="${sessionScope.loginError != null}">${sessionScope.loginError}</c:if>
 
 </form>
