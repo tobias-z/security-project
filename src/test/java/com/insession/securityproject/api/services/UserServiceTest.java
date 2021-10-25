@@ -31,4 +31,9 @@ class UserServiceTest {
         userService.sendPinMail(user);
     }
 
+    @Test
+    void sendSMS() {
+        User user = new User("bob", UserRole.USER, "jensgelbek@gmail.com");
+        userService.sendPinSMS(user);
+    }
 }
