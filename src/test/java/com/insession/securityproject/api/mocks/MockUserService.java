@@ -6,7 +6,12 @@ import com.insession.securityproject.domain.user.UserRole;
 
 public class MockUserService implements IUserService {
     @Override
-    public User someMethod(String username) {
-        return new User(username, UserRole.USER);
+    public User someMethod(String username, String userName) {
+        return new User(username, UserRole.USER, userName);
+    }
+
+    @Override
+    public void sendPinMail( User user) {
+
     }
 }
