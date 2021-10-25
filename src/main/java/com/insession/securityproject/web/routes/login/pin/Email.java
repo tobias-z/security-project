@@ -1,16 +1,27 @@
 package com.insession.securityproject.web.routes.login.pin;
 
+import com.insession.securityproject.api.services.AuthPinCodeService;
+import com.insession.securityproject.api.services.UserService;
+import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/login/pin/email")
 public class Email extends RootServlet {
+
+    private final IUserService userService = new UserService(
+            new UserRepository(Persistence.createEntityManagerFactory("pu"))
+    );
 
     @Override
     public void init() throws ServletException {
@@ -29,8 +40,34 @@ public class Email extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+        try {
+            HttpSession session = req.getSession();
+            String username = (String) session.getAttribute("pinCodeUsername");
+            Integer pinCode = getPinCode(req);
+
+            if (AuthPinCodeService.getInstance().isValidPinCode(username, pinCode)) {
+                setUserVariables(session, username);
+                return "/";
+            }
+
+            return "/login/pin/email";
+        } catch (UserNotFoundException e) {
+            return super.sendError(req, resp, "Please try to login again. An error happened when trying to find your user");
+        }
+    }
+
+    private void setUserVariables(HttpSession session, String username) throws UserNotFoundException {
+        UserRole userRole = userService.getUserRole(username);
+        session.setAttribute("role", userRole);
+        session.setAttribute("userName", username);
+    }
+
+    private int getPinCode(HttpServletRequest req) {
+        try {
+            return Integer.parseInt(req.getParameter("pin-code"));
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
 }

@@ -1,8 +1,6 @@
 package com.insession.securityproject.api.services;
 
-import com.insession.securityproject.domain.user.IUserRepository;
-import com.insession.securityproject.domain.user.IUserService;
-import com.insession.securityproject.domain.user.User;
+import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
 import javax.mail.*;
@@ -98,5 +96,11 @@ public class UserService implements IUserService {
         return new User(user);
     }
 
+    @Override
+    public UserRole getUserRole(String username) throws UserNotFoundException {
+        UserEntity userEntity = repository.getUserByUserName(username);
+        // TODO: Make user entity have a UserRole
+        return UserRole.USER;
+    }
 
 }

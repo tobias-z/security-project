@@ -35,10 +35,6 @@ public class UserAllowedFilter {
             sendError("Please stop brute brute forcing us :)");
         }
 
-        if (roleAllowed.equals(UserRole.NO_USER)) {
-            return;
-        }
-
         if (!userRole.equals(roleAllowed)) {
             sendError("You are not allowed on that page");
         }
