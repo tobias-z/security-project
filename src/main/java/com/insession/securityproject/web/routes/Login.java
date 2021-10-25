@@ -18,7 +18,9 @@ import java.io.IOException;
 @WebServlet("/login")
 public class Login extends RootServlet {
 
-    private IUserService userService = new UserService(new UserRepository(Persistence.createEntityManagerFactory("pu")));
+    private final IUserService userService = new UserService(
+            new UserRepository(Persistence.createEntityManagerFactory("pu"))
+    );
 
     public void init() {
         this.title = "Login";
@@ -38,14 +40,14 @@ public class Login extends RootServlet {
         HttpSession session = req.getSession();
         try {
             User user = userService.login(userName, password);
-            session.setAttribute("userName", user.getUsername());
-            session.setAttribute("role", user.getUserRole());
+            userService.sendPinMail(user);
+            session.setAttribute("pinCodeUsername", user.getUsername());
             session.removeAttribute("loginError");
+            return "/login/pin/email";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             session.setAttribute("loginError", e.getMessage());
             return "/login";
         }
-        return "/index";
     }
 }

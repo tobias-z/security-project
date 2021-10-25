@@ -10,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.Random;
+
 public class UserService implements IUserService {
     private final IUserRepository repository;
 
@@ -20,19 +21,19 @@ public class UserService implements IUserService {
     // Only used to give example of testing the services
 
     @Override
-    public void sendPinMail( User user) {
-    // generates One time pin cocde and sends i to users email.
-        Random rand = new Random();
-        int pinCode= rand.nextInt(10000);
+    public void sendPinMail(User user) {
+        // generates One time pin cocde and sends i to users email.
+        AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
+        int pinCode = pinCodeService.getNewPinCode(user.getUsername());
 
         // Recipient's email ID needs to be mentioned.
-        String to = "jensgelbek@gmail.com";
+        String to = user.getUserEmail();
 
         // Sender's email ID needs to be mentioned
         String from = "pin.insession@gmail.com";
 
         // Sender's password ID needs to be mentioned ------!!!!!!!!!!!!!
-        String password="PrTzJg<>";
+        String password = "PrTzJg<>";
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
@@ -75,7 +76,7 @@ public class UserService implements IUserService {
             message.setSubject("Your onetime Pin Code");
 
             // Now set the actual message
-            message.setText("Your one time Pin Code is: "+pinCode);
+            message.setText("Your one time Pin Code is: " + pinCode);
 
             System.out.println("sending...");
             // Send message
@@ -84,7 +85,6 @@ public class UserService implements IUserService {
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
-
 
 
     }
