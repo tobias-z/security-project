@@ -32,7 +32,7 @@ public class UserAllowedFilter {
         UserRole userRole = (UserRole) session.getAttribute("role");
 
         if (userRole == null) {
-            sendError(404, "Please stop brute brute forcing us :)");
+            sendError("Please stop brute brute forcing us :)");
         }
 
         if (roleAllowed.equals(UserRole.NO_USER)) {
@@ -40,12 +40,12 @@ public class UserAllowedFilter {
         }
 
         if (!userRole.equals(roleAllowed)) {
-            sendError(401, "You are not allowed on that page");
+            sendError("You are not allowed on that page");
         }
     }
 
-    private void sendError(int code, String message) throws ServletException, IOException {
-        req.setAttribute("errorCode", code);
+    private void sendError(String message) throws ServletException, IOException {
+        req.setAttribute("errorCode", 200);
         req.setAttribute("errorMessage", message);
         req.getRequestDispatcher("/WEB-INF/routes/404.jsp").forward(req, res);
     }
