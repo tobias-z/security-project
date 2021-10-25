@@ -1,5 +1,6 @@
 package com.insession.securityproject.infrastructure.repositories;
 
+import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
@@ -26,10 +27,6 @@ class UserRepositoryTest {
         // Do some creating of test users
     }
 
-    @Test
-    void sendMail() {
-        User user = new User("bob", UserRole.USER, "jensgelbek@gmail.com");
-        service.sendPinMail(user);
-    }
+
 
 }

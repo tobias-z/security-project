@@ -22,17 +22,20 @@ public class UserService implements IUserService {
     @Override
     public void sendPinMail( User user) {
     // generates One time pin cocde and sends i to users email.
-        Random rand = new Random();
-        int pinCode= rand.nextInt(10000);
+        //Random rand = new Random();
+        //int pinCode= rand.nextInt(10000);
+
+        AuthPinCodeService authPinCodeService=AuthPinCodeService.getInstance();
+        int pinCode=authPinCodeService.getNewPinCode(user.getUsername());
 
         // Recipient's email ID needs to be mentioned.
-        String to = "jensgelbek@gmail.com";
+        String to = user.getUserEmail();
 
         // Sender's email ID needs to be mentioned
-        String from = "pin.insession@gmail.com";
+        String from = System.getenv("SEC_USERNAME");
 
         // Sender's password ID needs to be mentioned ------!!!!!!!!!!!!!
-        String password="PrTzJg<>";
+        String password=System.getenv("SEC_PASSWORD");
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
