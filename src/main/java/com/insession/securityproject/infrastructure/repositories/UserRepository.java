@@ -8,6 +8,16 @@ import com.insession.securityproject.infrastructure.entities.UserEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+//imports for sending mail
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 public class UserRepository implements IUserRepository {
 
     private final EntityManagerFactory emf;
@@ -18,7 +28,7 @@ public class UserRepository implements IUserRepository {
 
 
     @Override
-    public User someMethod(String username) {
+    public User someMethod(String username,String userEmail) {
         // Only done to show how to test services
         // Would be a db call or something
         return new User(username, UserRole.USER, "string");

@@ -13,5 +13,12 @@ public class MockUserService implements IUserService {
     @Override
     public User login(String username, String password) {
         return null;
+    public User someMethod(String username, String userName) {
+        return new User(username, UserRole.USER, userName);
+    }
+
+    @Override
+    public void sendPinMail( User user) {
+
     }
 }
