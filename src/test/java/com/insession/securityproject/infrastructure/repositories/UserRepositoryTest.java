@@ -22,9 +22,8 @@ class UserRepositoryTest {
     private  IUserService service;//---------
     @BeforeEach
     void setUp() {
-        repository = new UserRepository();
-        service=new UserService(repository);
-       // emf = Persistence.createEntityManagerFactory("puTest");
+        repository = new UserRepository(emf);
+        emf = Persistence.createEntityManagerFactory("puTest");
         // Do some creating of test users
     }
 
