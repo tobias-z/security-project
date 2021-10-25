@@ -7,7 +7,6 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-import java.util.Random;
 
 public class UserService implements IUserService {
     private final IUserRepository repository;
@@ -20,7 +19,7 @@ public class UserService implements IUserService {
 
     @Override
     public void sendPinMail(User user) {
-        // generates One time pin cocde and sends i to users email.
+        // generates One time pin code and sends i to users email.
         AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
         int pinCode = pinCodeService.getNewPinCode(user.getUsername());
 
@@ -33,7 +32,7 @@ public class UserService implements IUserService {
         // Sender's password ID needs to be mentioned ------!!!!!!!!!!!!!
         String password = "PrTzJg<>";
 
-        // Assuming you are sending email from through gmails smtp
+        // Assuming you are sending email from through gmail's smtp
         String host = "smtp.gmail.com";
 
         // Get system properties

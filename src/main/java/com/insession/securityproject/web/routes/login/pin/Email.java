@@ -45,21 +45,22 @@ public class Email extends RootServlet {
             String username = (String) session.getAttribute("pinCodeUsername");
             Integer pinCode = getPinCode(req);
 
-            if (AuthPinCodeService.getInstance().isValidPinCode(username, pinCode)) {
-                setUserVariables(session, username);
-                return "/";
-            }
+            boolean isValidPinCode = AuthPinCodeService.getInstance().isValidPinCode(username, pinCode);
+            if (!isValidPinCode)
+                return "/login/pin/email";
 
-            return "/login/pin/email";
+            setUserSessionVariables(session, username);
+            return "/";
         } catch (UserNotFoundException e) {
             return super.sendError(req, resp, "Please try to login again. An error happened when trying to find your user");
         }
     }
 
-    private void setUserVariables(HttpSession session, String username) throws UserNotFoundException {
+    private void setUserSessionVariables(HttpSession session, String username) throws UserNotFoundException {
         UserRole userRole = userService.getUserRole(username);
         session.setAttribute("role", userRole);
         session.setAttribute("userName", username);
+        session.removeAttribute("pinCodeUsername");
     }
 
     private int getPinCode(HttpServletRequest req) {

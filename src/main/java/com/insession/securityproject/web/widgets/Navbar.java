@@ -1,8 +1,9 @@
 package com.insession.securityproject.web.widgets;
 
+import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,11 +17,11 @@ public class Navbar {
 
     private List<Item> getItems() {
         List<Item> items = new ArrayList<>();
-        items.add(new Item("Home", "/", UserRole.USER));
-        items.add(new Item("Login", "/login", UserRole.USER));
+        items.add(new Item("Home", "/", UserRole.USER, UserRole.NO_USER, UserRole.ADMIN));
+        items.add(new Item("Login", "/login", UserRole.NO_USER));
         items.add(new Item("Admin", "/admin", UserRole.ADMIN));
         items.add(new Item("Profile", "/profile", UserRole.USER));
-        items.add(new Item("Products", "/products", UserRole.USER));
+        items.add(new Item("Products", "/products", UserRole.USER, UserRole.NO_USER));
         return items;
     }
 
@@ -28,25 +29,20 @@ public class Navbar {
         UserRole role = (UserRole) request.getSession().getAttribute("role");
         List<Item> items = getItems();
 
-        if (role != null && role.equals(UserRole.ADMIN)) {
-            return items;
-        }
-
         return items.stream()
-                .filter(item -> item.getRole().equals(UserRole.USER))
+                .filter(item -> Arrays.asList(item.getRoles()).contains(role))
                 .collect(Collectors.toList());
     }
 
     public class Item {
-
         private final String name;
         private final String url;
-        private final UserRole role;
+        private final UserRole[] roles;
 
-        Item(String name, String url, UserRole role) {
+        Item(String name, String url, UserRole... roles) {
             this.name = name;
             this.url = url;
-            this.role = role;
+            this.roles = roles;
         }
 
         public String getName() {
@@ -57,8 +53,8 @@ public class Navbar {
             return url;
         }
 
-        public UserRole getRole() {
-            return role;
+        public UserRole[] getRoles() {
+            return roles;
         }
 
         public boolean isActive() {
