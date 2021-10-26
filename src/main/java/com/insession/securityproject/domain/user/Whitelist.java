@@ -1,22 +1,12 @@
 package com.insession.securityproject.domain.user;
 
-import com.insession.securityproject.infrastructure.entities.UserEntity;
-
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Whitelist {
 
     private String password;
-    private String userName;
-    private String email;
     private Array characters;
-
-    public Whitelist(UserEntity userEntity) {
-        this.password = userEntity.getPassword();
-        this.userName = userEntity.getUserName();
-    }
 
     public Whitelist() {
     }
@@ -24,40 +14,35 @@ public class Whitelist {
     public static ArrayList whiteListCharacters() {
         ArrayList allChars = new ArrayList<>();
 
+        allChars.add('æ');
+        allChars.add('ø');
+        allChars.add('å');
+        allChars.add('Æ');
+        allChars.add('Ø');
+        allChars.add('Å');
+
         for(char cu = 'A'; cu <= 'Z'; cu++) {
             allChars.add(cu);
         }
         for (char cl = 'a'; cl <= 'z'; cl++) {
             allChars.add(cl);
         }
-        for(int i = 0; i <= 9; i++) {
+        for(char i = '0'; i <= '9'; i++) {
             allChars.add(i);
         }
         return allChars;
     }
 
-    public static void passwordWhitelist(String password) {
-        char[] arr = whiteListCharacters().toString().toCharArray();
-        char[] pass = password.toCharArray();
-
-        Boolean bool = false;
-        for (int i = 0; i <= pass.length-1; i++) {
+    public static boolean passwordWhitelist(String password) {
+        Boolean passWhitelist = false;
+        for (int i = 0; i <= password.length() - 1; i++) {
             char c = password.charAt(i);
-            System.out.println(c);
-            if (whiteListCharacters().contains(pass[i])) {
-                System.out.println("WOW");
+            if (whiteListCharacters().contains(c)) {
+                passWhitelist = true;
             } else {
-                System.out.println("IKKE-WOW");
+                passWhitelist = false;
             }
-            bool = true;
         }
+        return passWhitelist;
     }
-
-
-    public static void main(String[] args) {
-        Whitelist whitelist = new Whitelist();
-        passwordWhitelist("en2tre");
-    }
-
-
 }
