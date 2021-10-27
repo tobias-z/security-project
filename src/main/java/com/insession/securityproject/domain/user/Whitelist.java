@@ -5,14 +5,8 @@ import java.util.ArrayList;
 
 public class Whitelist {
 
-    private String password;
-    private Array characters;
-
-    public Whitelist() {
-    }
-
-    public static ArrayList whiteListCharacters() {
-        ArrayList allChars = new ArrayList<>();
+    private static ArrayList<Character> whiteListCharacters() {
+        ArrayList<Character> allChars = new ArrayList<>();
 
         allChars.add('æ');
         allChars.add('ø');
@@ -33,16 +27,25 @@ public class Whitelist {
         return allChars;
     }
 
-    public static boolean passwordWhitelist(String password) {
-        Boolean passWhitelist = false;
-        for (int i = 0; i <= password.length() - 1; i++) {
-            char c = password.charAt(i);
-            if (whiteListCharacters().contains(c)) {
-                passWhitelist = true;
-            } else {
-                passWhitelist = false;
+    private static boolean validate(String check, ArrayList<Character> listVar) {
+        for (int i = 0; i <= check.length() - 1; i++) {
+            char c = check.charAt(i);
+            if (!listVar.contains(c)) {
+                return false;
             }
         }
-        return passWhitelist;
+        return true;
     }
+
+    public static boolean validateInput(String check) {
+        return validate(check, whiteListCharacters());
+    }
+
+    public static boolean validateEmail(String email) {
+        ArrayList<Character> listVar = whiteListCharacters();
+        listVar.add('@');
+        listVar.add('.');
+        return validate(email, listVar) && (email.contains("@") && email.contains("."));
+    }
+
 }
