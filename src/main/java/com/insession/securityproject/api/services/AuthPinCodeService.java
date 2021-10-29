@@ -1,5 +1,7 @@
 package com.insession.securityproject.api.services;
 
+import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -13,49 +15,47 @@ public class AuthPinCodeService {
         return instance;
     }
 
-    private final Map<String, Integer> pinCodes;
+    private final Map<String, Map<PinCodeChannel, Integer>> pinCodes;
 
     private AuthPinCodeService() {
         pinCodes = new HashMap<>();
     }
 
-    public Integer getNewPinCode(String username) {
+    public Integer getNewPinCode(String username, PinCodeChannel channel) {
         int pinCode = getRandomPinCode(100000, 999999);
-        addPinCode(username, pinCode);
-        Thread thread = new Thread(startInvalidation(username, pinCode));
+        Map<PinCodeChannel, Integer> channels = getChannel(username);
+        channels.put(channel, pinCode);
+        Thread thread = new Thread(startInvalidation(channels, channel));
         thread.start();
         return pinCode;
     }
 
-    public boolean isValidPinCode(String username, Integer pinCode) {
+    public boolean isValidPinCode(String username, PinCodeChannel channel, Integer pinCode) {
         synchronized (pinCodes) {
-            Integer thePinCode = pinCodes.get(username);
+            Map<PinCodeChannel, Integer> channels = pinCodes.get(username);
+            if (channels == null) return false;
+            Integer thePinCode = channels.get(channel);
             if (thePinCode == null || !thePinCode.equals(pinCode)) return false;
-            removePinCode(username, thePinCode);
+            channels.remove(channel);
             return true;
         }
     }
 
-    private void addPinCode(String username, Integer pinCode) {
+    private Map<PinCodeChannel, Integer> getChannel(String username) {
         synchronized (pinCodes) {
-            pinCodes.put(username, pinCode);
+            Map<PinCodeChannel, Integer> channels = pinCodes.get(username);
+            if (channels == null)
+                channels = new HashMap<>();
+            pinCodes.put(username, channels);
+            return channels;
         }
     }
 
-    private void removePinCode(String username, Integer pinCode) {
-        synchronized (pinCodes) {
-            if (!pinCodes.containsKey(username)) return;
-            boolean isSameToken = pinCodes.get(username).equals(pinCode);
-            if (isSameToken)
-                pinCodes.remove(username);
-        }
-    }
-
-    private Runnable startInvalidation(String username, int pinCode) {
+    private Runnable startInvalidation(Map<PinCodeChannel, Integer> channels, PinCodeChannel channel) {
         return () -> {
             try {
                 TimeUnit.MINUTES.sleep(5);
-                removePinCode(username, pinCode);
+                channels.remove(channel);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
