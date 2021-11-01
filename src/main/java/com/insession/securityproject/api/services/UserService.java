@@ -4,6 +4,10 @@ import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -22,17 +26,20 @@ public class UserService implements IUserService {
     @Override
     public void sendPinMail( User user) {
     // generates One time pin cocde and sends i to users email.
-        Random rand = new Random();
-        int pinCode= rand.nextInt(10000);
+        //Random rand = new Random();
+        //int pinCode= rand.nextInt(10000);
+
+        AuthPinCodeService authPinCodeService=AuthPinCodeService.getInstance();
+        int pinCode=authPinCodeService.getNewPinCode(user.getUsername());
 
         // Recipient's email ID needs to be mentioned.
-        String to = "jensgelbek@gmail.com";
+        String to = user.getUserEmail();
 
         // Sender's email ID needs to be mentioned
-        String from = "pin.insession@gmail.com";
+        String from = System.getenv("SEC_USERNAME");
 
         // Sender's password ID needs to be mentioned ------!!!!!!!!!!!!!
-        String password="PrTzJg<>";
+        String password=System.getenv("SEC_PASSWORD");
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
@@ -69,7 +76,7 @@ public class UserService implements IUserService {
             message.setFrom(new InternetAddress(from));
 
             // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
 
             // Set Subject: header field
             message.setSubject("Your onetime Pin Code");
@@ -86,6 +93,23 @@ public class UserService implements IUserService {
         }
 
 
+
+    }
+
+    @Override
+    public void sendPinSMS(User user) {
+        String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+        String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+
+        AuthPinCodeService authPinCodeService=AuthPinCodeService.getInstance();
+        int pinCode=authPinCodeService.getNewPinCode(user.getUsername());
+        System.out.println(ACCOUNT_SID+" "+AUTH_TOKEN);
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                        new PhoneNumber("+4542733385"),
+                        new PhoneNumber("+13202881854"),
+                        "Your one time Pin Code is: "+pinCode)
+                  .create();
 
     }
 
