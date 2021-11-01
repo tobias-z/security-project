@@ -4,7 +4,7 @@ on:
     branches: 
     - main
 jobs:
-  Do-the-travis-thing:
+  push-and-deploy:
     runs-on: ubuntu-20.04 
     steps:
       - name: checkout
