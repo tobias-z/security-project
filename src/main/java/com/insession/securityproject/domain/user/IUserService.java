@@ -6,4 +6,6 @@ public interface IUserService {
     void sendPinMail(User user);
 
     UserRole getUserRole(String username) throws UserNotFoundException;
+  
+    void sendPinSMS(User user);
 }
