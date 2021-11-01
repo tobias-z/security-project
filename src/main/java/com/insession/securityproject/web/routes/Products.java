@@ -13,13 +13,12 @@ import java.io.IOException;
 
 @WebServlet("/products")
 public class Products extends RootServlet {
-    private IProductService productService;
+    private final IProductService productService = new ProductService(ListProjectRepository.getInstance());
 
     @Override
     public void init() {
         this.title = "Products";
         this.description = "This page contains all the products you can get";
-        this.productService = new ProductService(ListProjectRepository.getInstance());
     }
 
     @Override

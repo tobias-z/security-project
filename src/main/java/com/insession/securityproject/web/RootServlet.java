@@ -25,6 +25,13 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         this.cacheControl = null;
     }
 
+    protected String sendError(HttpServletRequest req, HttpServletResponse res, String message) throws ServletException, IOException {
+        req.setAttribute("errorCode", 200);
+        req.setAttribute("errorMessage", message);
+        req.getRequestDispatcher("/WEB-INF/routes/404.jsp").forward(req, res);
+        return "/404";
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
