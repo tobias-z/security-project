@@ -5,6 +5,7 @@ import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
@@ -45,7 +46,7 @@ public class Email extends RootServlet {
             String username = (String) session.getAttribute("pinCodeUsername");
             Integer pinCode = getPinCode(req);
 
-            boolean isValidPinCode = AuthPinCodeService.getInstance().isValidPinCode(username, pinCode);
+            boolean isValidPinCode = AuthPinCodeService.getInstance().isValidPinCode(username, PinCodeChannel.EMAIL, pinCode);
             if (!isValidPinCode)
                 return "/login/pin/email";
 
