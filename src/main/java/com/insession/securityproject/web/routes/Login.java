@@ -8,7 +8,6 @@ import com.insession.securityproject.infrastructure.entities.Connection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ public class Login extends RootServlet {
     public void init() {
         this.title = "Login";
         this.description = "Login page";
-        this.roleAllowed = UserRole.NO_USER;
+        setRolesAllowed(UserRole.NO_USER);
     }
 
     @Override
