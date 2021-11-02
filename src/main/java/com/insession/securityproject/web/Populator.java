@@ -1,5 +1,6 @@
 package com.insession.securityproject.web;
 
+import com.insession.securityproject.infrastructure.entities.Connection;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
 import javax.persistence.EntityManager;
@@ -8,7 +9,7 @@ import javax.persistence.Persistence;
 
 public class Populator {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+        EntityManagerFactory emf = Connection.getEmf();
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

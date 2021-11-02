@@ -5,6 +5,7 @@ import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.infrastructure.entities.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ class UserRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new UserRepository(emf);
-        emf = Persistence.createEntityManagerFactory("puTest");
+        emf = Connection.getTestEmf();
         // Do some creating of test users
     }
 
