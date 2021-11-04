@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.insession.securityproject.domain.user.Whitelist.validateEmail;
+import static com.insession.securityproject.domain.user.Whitelist.validateInput;
+
 @WebServlet("/signup")
 public class Signup extends RootServlet {
 
@@ -38,11 +41,29 @@ public class Signup extends RootServlet {
         String password = req.getParameter("password");
         HttpSession session = req.getSession(true);
         try {
-            User user = userService.signup(username, email, phone, password);
-            return "/signup";
-        } catch (UserCreationException | InvalidKeysException e) {
+            validate(username, email, phone, email);
+            if (!userService.userExists(username, email)) {
+                throw new UserExistsException("A user with that username or email already exists");
+            }
+            User user = new User(username, UserRole.USER, email, phone);
+            userService.sendPinMail(user);
+            userService.sendPinSMS(user);
+            return "/pin/multi";
+        } catch (InvalidKeysException | UserExistsException e) {
             session.setAttribute("signupError", e.getMessage());
             return "/signup";
         }
+    }
+
+    private void validate(String username, String email, Integer phone, String password) throws InvalidKeysException {
+        String message = "Invalid input provided in field: ";
+        if (!validateInput(username))
+            throw new InvalidKeysException(message + "Username");
+        if (!validateEmail(email))
+            throw new InvalidKeysException(message + "Email");
+        if (!validateInput(String.valueOf(phone)))
+            throw new InvalidKeysException(message + "Phone Number");
+        if (!validateInput(password))
+            throw new InvalidKeysException(message + "Password");
     }
 }

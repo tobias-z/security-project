@@ -31,4 +31,20 @@ public class UserRepository implements IUserRepository {
 
     }
 
+    @Override
+    public boolean userExists(String username, String email) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            UserEntity userEntity = em.createQuery("SELECT u FROM UserEntity u WHERE u.userName = :username OR u.email = :email", UserEntity.class)
+                    .setParameter("username", username)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return userEntity != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
 }
