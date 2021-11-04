@@ -15,6 +15,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+import static com.insession.securityproject.domain.user.Whitelist.*;
+
 public class UserService implements IUserService {
     private final IUserRepository repository;
 
@@ -123,6 +125,24 @@ public class UserService implements IUserService {
         UserEntity userEntity = repository.getUserByUserName(username);
         // TODO: Make user entity have a UserRole
         return UserRole.USER;
+    }
+
+    @Override
+    public User signup(String username, String email, Integer phone, String password) throws UserCreationException, InvalidKeysException {
+        validate(username, email, phone, password);
+        return null;
+    }
+
+    private void validate(String username, String email, Integer phone, String password) throws InvalidKeysException {
+        String message = "Invalid input provided in field: ";
+        if (!validateInput(username))
+            throw new InvalidKeysException(message + "Username");
+        if (!validateEmail(email))
+            throw new InvalidKeysException(message + "Email");
+        if (!validateInput(String.valueOf(phone)))
+            throw new InvalidKeysException(message + "Phone Number");
+        if (!validateInput(password))
+            throw new InvalidKeysException(message + "Password");
     }
 
 }

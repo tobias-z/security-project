@@ -1,4 +1,4 @@
-package com.insession.securityproject.infrastructure.entities;
+package com.insession.securityproject.infrastructure;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

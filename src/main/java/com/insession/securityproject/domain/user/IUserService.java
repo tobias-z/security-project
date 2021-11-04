@@ -8,4 +8,6 @@ public interface IUserService {
     UserRole getUserRole(String username) throws UserNotFoundException;
   
     void sendPinSMS(User user);
+
+    User signup(String username, String email, Integer phone, String password) throws UserCreationException, InvalidKeysException;
 }

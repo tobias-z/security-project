@@ -1,8 +1,7 @@
 package com.insession.securityproject.infrastructure.entities;
-import com.insession.securityproject.domain.user.User;
+import com.insession.securityproject.domain.user.UserRole;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 
 
@@ -22,12 +21,21 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
+    private Integer phone;
+
+    @Column(name = "role")
+    private UserRole role;
+
+
     public UserEntity() {}
 
-    public UserEntity(String userName, String password, String email) {
+    public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
         this.userName = userName;
         this.email = email;
+        this.phone = phone;
+        this.role = role;
     }
 
     public boolean verifyPassword(String pw){
@@ -64,5 +72,21 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
+        this.phone = phone;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
