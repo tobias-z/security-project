@@ -10,7 +10,6 @@ import com.insession.securityproject.infrastructure.entities.Connection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +28,7 @@ public class Email extends RootServlet {
     public void init() throws ServletException {
         this.title = "Email PinCode";
         this.description = "PinCode validation from email";
-        this.roleAllowed = UserRole.NO_USER;
+        setRolesAllowed(UserRole.NO_USER);
     }
 
     @Override

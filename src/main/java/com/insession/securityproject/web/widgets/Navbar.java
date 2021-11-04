@@ -1,11 +1,12 @@
 package com.insession.securityproject.web.widgets;
 
-import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
 
-import java.util.*;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Navbar {
 

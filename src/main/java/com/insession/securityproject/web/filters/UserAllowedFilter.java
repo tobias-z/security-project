@@ -3,41 +3,39 @@ package com.insession.securityproject.web.filters;
 import com.insession.securityproject.domain.user.UserRole;
 
 import java.io.IOException;
+import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class UserAllowedFilter {
-    private final UserRole roleAllowed;
+    private final UserRole[] rolesAllowed;
     private final HttpServletRequest req;
     private final HttpServletResponse res;
 
-    public UserAllowedFilter(UserRole roleAllowed, HttpServletRequest req,
+    public UserAllowedFilter(UserRole[] roleAllowed, HttpServletRequest req,
                              HttpServletResponse res) {
-        this.roleAllowed = roleAllowed;
+        this.rolesAllowed = roleAllowed;
         this.req = req;
         this.res = res;
     }
 
     public void doFilter()
             throws IOException, ServletException {
-        if (roleAllowed == null) {
-            return;
-        }
-
         HttpSession session = req.getSession();
 
-        // This should be username not user
         UserRole userRole = (UserRole) session.getAttribute("role");
 
         if (userRole == null) {
-            sendError("Please stop brute brute forcing us :)");
+            sendError("You are not allowed here");
         }
 
-        if (!userRole.equals(roleAllowed)) {
+        if (rolesAllowed.length == 0)
+            return;
+
+        if (!Arrays.asList(rolesAllowed).contains(userRole))
             sendError("You are not allowed on that page");
-        }
     }
 
     private void sendError(String message) throws ServletException, IOException {

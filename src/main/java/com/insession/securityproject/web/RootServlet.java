@@ -13,16 +13,20 @@ import javax.servlet.http.HttpSession;
 
 public abstract class RootServlet extends HttpServlet implements IRoute {
 
-    protected UserRole roleAllowed;
+    protected UserRole[] rolesAllowed;
     protected String title;
     protected String description;
     protected String cacheControl;
 
     public RootServlet() {
-        this.roleAllowed = null;
+        this.rolesAllowed = new UserRole[] {};
         this.title = "Base title if none was given";
         this.description = "Base title if none was given";
         this.cacheControl = null;
+    }
+
+    protected void setRolesAllowed(UserRole... roles) {
+        this.rolesAllowed = roles;
     }
 
     protected String sendError(HttpServletRequest req, HttpServletResponse res, String message) throws ServletException, IOException {
@@ -38,7 +42,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         init();
 
         setRoleIfNotLoggedIN(req);
-        new UserAllowedFilter(this.roleAllowed, req, resp).doFilter();
+        new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
 
         String route = loader(req, resp);
         req.setAttribute("title", title);
@@ -61,7 +65,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        new UserAllowedFilter(this.roleAllowed, req, resp).doFilter();
+        new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
         String redirectPath = action(req, resp);
         resp.sendRedirect(req.getContextPath() + redirectPath);
     }
