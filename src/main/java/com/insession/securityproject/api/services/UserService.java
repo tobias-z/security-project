@@ -2,6 +2,7 @@ package com.insession.securityproject.api.services;
 
 import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -126,7 +127,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User signup(String username, String email, Integer phone, String password) throws UserCreationException, InvalidKeysException {
+    public User signup(UserCredentials credentials) throws UserCreationException, InvalidKeysException {
         return null;
     }
 

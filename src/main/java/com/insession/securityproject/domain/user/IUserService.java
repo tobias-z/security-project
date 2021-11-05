@@ -1,5 +1,7 @@
 package com.insession.securityproject.domain.user;
 
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
+
 public interface IUserService {
     User login(String username, String password) throws Exception;
 
@@ -9,7 +11,7 @@ public interface IUserService {
   
     void sendPinSMS(User user);
 
-    User signup(String username, String email, Integer phone, String password) throws UserCreationException, InvalidKeysException;
+    User signup(UserCredentials credentials) throws UserCreationException, InvalidKeysException;
 
     boolean userExists(String username, String email);
 }

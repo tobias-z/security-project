@@ -8,6 +8,7 @@ import com.insession.securityproject.infrastructure.cache.Redis;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,6 +53,7 @@ public class Signup extends RootServlet {
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
             cacheVariables(new UserCredentials(username, email, password, phone));
+            session.setAttribute("signupUsername", username);
             return "/pin/multi";
         } catch (InvalidKeysException | UserExistsException e) {
             session.setAttribute("signupError", e.getMessage());
@@ -60,7 +62,9 @@ public class Signup extends RootServlet {
     }
 
     private void cacheVariables(UserCredentials userCredentials) {
-        Redis.withConnection(jedis -> jedis.set(userCredentials.getUsername(), new Gson().toJson(userCredentials)));
+        try (Jedis jedis = Redis.getJedis()) {
+            jedis.set(userCredentials.getUsername(), new Gson().toJson(userCredentials));
+        }
     }
 
     private void validate(String username, String email, Integer phone, String password) throws InvalidKeysException {
