@@ -11,7 +11,7 @@ public interface IUserService {
   
     void sendPinSMS(User user);
 
-    User signup(UserCredentials credentials) throws UserCreationException, InvalidKeysException;
+    void signup(UserCredentials credentials) throws UserCreationException;
 
     boolean userExists(String username, String email);
 }

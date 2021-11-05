@@ -1,6 +1,6 @@
 package com.insession.securityproject.api.services;
 
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

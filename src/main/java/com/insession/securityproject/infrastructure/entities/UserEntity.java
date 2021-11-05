@@ -31,6 +31,7 @@ public class UserEntity {
     public UserEntity() {}
 
     public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
+        //TODO: MAKE PEPPER A ENV VARIABLE
         this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
         this.userName = userName;
         this.email = email;

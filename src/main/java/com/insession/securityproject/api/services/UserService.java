@@ -1,9 +1,10 @@
 package com.insession.securityproject.api.services;
 
 import com.insession.securityproject.domain.user.*;
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
+import com.sun.org.apache.xerces.internal.impl.io.UCSReader;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -15,8 +16,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-
-import static com.insession.securityproject.domain.user.Whitelist.*;
 
 public class UserService implements IUserService {
     private final IUserRepository repository;
@@ -127,8 +126,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User signup(UserCredentials credentials) throws UserCreationException, InvalidKeysException {
-        return null;
+    public void signup(UserCredentials credentials) throws UserCreationException {
+        repository.createUser(credentials);
     }
 
     @Override

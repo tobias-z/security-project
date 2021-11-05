@@ -77,5 +77,7 @@ public class Signup extends RootServlet {
             throw new InvalidKeysException(message + "Phone Number");
         if (!validateInput(password))
             throw new InvalidKeysException(message + "Password");
+        if (password.length() < 17)
+            throw new InvalidKeysException("Password is too short... Please provide at least 17 characters");
     }
 }

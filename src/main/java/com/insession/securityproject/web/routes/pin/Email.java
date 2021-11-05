@@ -5,7 +5,7 @@ import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;

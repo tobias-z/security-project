@@ -3,9 +3,8 @@ package com.insession.securityproject.web.routes.pin;
 import com.google.gson.Gson;
 import com.insession.securityproject.api.services.AuthPinCodeService;
 import com.insession.securityproject.api.services.UserService;
-import com.insession.securityproject.domain.user.IUserService;
-import com.insession.securityproject.domain.user.UserRole;
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.user.*;
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.cache.Redis;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
@@ -54,7 +53,19 @@ public class Multi extends RootServlet {
             return "/pin/multi";
         }
         UserCredentials credentials = getUserCredentials(username, req, resp);
+        createUser(req, resp, credentials);
+        session.setAttribute("userName", username);
+        session.setAttribute("role", UserRole.USER);
         return "/";
+    }
+
+    private void createUser(HttpServletRequest req, HttpServletResponse resp, UserCredentials credentials) throws ServletException, IOException {
+        try {
+            userService.signup(credentials);
+        } catch (UserCreationException e) {
+            sendError(req, resp, "Unable to create your user... Please try again");
+            // Will never happen since send error sends the error page
+        }
     }
 
     private UserCredentials getUserCredentials(String username, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
