@@ -10,4 +10,10 @@ public class MockUserRepository implements IUserRepository {
     public UserEntity getUserByUserName(String username) {
         return new UserEntity("bob", "password", "dsada", 32132131, UserRole.USER);
     }
+
+    @Override
+    public boolean userExists(String username, String email) {
+        //TODO (tz): implement this!
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
 }

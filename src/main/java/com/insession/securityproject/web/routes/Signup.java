@@ -1,8 +1,11 @@
 package com.insession.securityproject.web.routes;
 
+import com.google.gson.Gson;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.*;
-import com.insession.securityproject.infrastructure.Connection;
+import com.insession.securityproject.infrastructure.DBConnection;
+import com.insession.securityproject.infrastructure.cache.Redis;
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
@@ -19,7 +22,7 @@ import static com.insession.securityproject.domain.user.Whitelist.validateInput;
 @WebServlet("/signup")
 public class Signup extends RootServlet {
 
-    private static final IUserService userService = new UserService(new UserRepository(Connection.getEmf()));
+    private static final IUserService userService = new UserService(new UserRepository(DBConnection.getEmf()));
 
     @Override
     public void init() throws ServletException {
@@ -41,18 +44,23 @@ public class Signup extends RootServlet {
         String password = req.getParameter("password");
         HttpSession session = req.getSession(true);
         try {
-            validate(username, email, phone, email);
-            if (!userService.userExists(username, email)) {
+            validate(username, email, phone, password);
+            if (userService.userExists(username, email)) {
                 throw new UserExistsException("A user with that username or email already exists");
             }
             User user = new User(username, UserRole.USER, email, phone);
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
+            cacheVariables(new UserCredentials(username, email, password, phone));
             return "/pin/multi";
         } catch (InvalidKeysException | UserExistsException e) {
             session.setAttribute("signupError", e.getMessage());
             return "/signup";
         }
+    }
+
+    private void cacheVariables(UserCredentials userCredentials) {
+        Redis.withConnection(jedis -> jedis.set(userCredentials.getUsername(), new Gson().toJson(userCredentials)));
     }
 
     private void validate(String username, String email, Integer phone, String password) throws InvalidKeysException {

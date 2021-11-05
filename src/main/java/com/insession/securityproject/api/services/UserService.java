@@ -102,10 +102,9 @@ public class UserService implements IUserService {
 
         AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.SMS);
-        System.out.println(ACCOUNT_SID + " " + AUTH_TOKEN);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-                        new PhoneNumber("+4542733385"),
+                        new PhoneNumber("+45" + user.getPhone()),
                         new PhoneNumber("+13202881854"),
                         "Your one time Pin Code is: " + pinCode)
                 .create();
@@ -123,8 +122,7 @@ public class UserService implements IUserService {
     @Override
     public UserRole getUserRole(String username) throws UserNotFoundException {
         UserEntity userEntity = repository.getUserByUserName(username);
-        // TODO: Make user entity have a UserRole
-        return UserRole.USER;
+        return userEntity.getRole();
     }
 
     @Override

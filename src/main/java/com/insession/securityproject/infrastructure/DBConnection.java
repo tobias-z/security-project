@@ -4,7 +4,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.Properties;
 
-public class Connection {
+public class DBConnection {
     public static EntityManagerFactory getEmf() {
         return getEntityManagerFactory(false);
     }

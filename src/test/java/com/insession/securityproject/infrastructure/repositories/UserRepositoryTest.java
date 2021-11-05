@@ -2,7 +2,7 @@ package com.insession.securityproject.infrastructure.repositories;
 
 import com.insession.securityproject.domain.user.IUserRepository;
 import com.insession.securityproject.domain.user.IUserService;
-import com.insession.securityproject.infrastructure.Connection;
+import com.insession.securityproject.infrastructure.DBConnection;
 import org.junit.jupiter.api.BeforeEach;
 
 import javax.persistence.EntityManagerFactory;
@@ -19,7 +19,7 @@ class UserRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new UserRepository(emf);
-        emf = Connection.getTestEmf();
+        emf = DBConnection.getTestEmf();
         // Do some creating of test users
     }
 

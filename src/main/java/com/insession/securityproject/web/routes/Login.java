@@ -4,7 +4,7 @@ import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
-import com.insession.securityproject.infrastructure.Connection;
+import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class Login extends RootServlet {
 
     private final IUserService userService = new UserService(
-            new UserRepository(Connection.getEmf())
+            new UserRepository(DBConnection.getEmf())
     );
 
     public void init() {
