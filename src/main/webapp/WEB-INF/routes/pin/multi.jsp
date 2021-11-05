@@ -8,7 +8,7 @@
     <form class="row mt-3" method="post" style="width: 500px">
         <div class="col-12">
             <label for="sms" class="form-label">SMS - Pin Code</label>
-            <input type="text" class="form-control form-control-lg" id="sms" name="sms" placeholder="Enter SMS Pin Code">
+            <input type="text" class="form-control form-control-lg" id="sms" name="sms" placeholder="Enter SMS Pin Code" autofocus>
         </div>
         <div class="col-12 mt-3">
             <label for="email" class="form-label">Email - Pin Code</label>
