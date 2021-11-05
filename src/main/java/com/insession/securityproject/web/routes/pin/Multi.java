@@ -56,6 +56,7 @@ public class Multi extends RootServlet {
         createUser(req, resp, credentials);
         session.setAttribute("userName", username);
         session.setAttribute("role", UserRole.USER);
+        session.removeAttribute("signupUsername");
         return "/";
     }
 
