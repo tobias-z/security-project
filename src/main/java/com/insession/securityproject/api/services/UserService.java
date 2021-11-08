@@ -1,7 +1,7 @@
 package com.insession.securityproject.api.services;
 
-import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.domain.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 import com.twilio.Twilio;
@@ -14,9 +14,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Properties;
 
 public class UserService implements IUserService {
@@ -128,7 +125,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void signup(UserCredentials credentials) throws UserCreationException {
+    public void signup(UserCredentials credentials, int emailPin, int smsPin) throws UserCreationException {
+        AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
+        boolean isValidEmail = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.EMAIL, emailPin);
+        boolean isValidSMS = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.SMS, smsPin);
+        if (!isValidEmail || !isValidSMS) {
+            throw new UserCreationException("Invalid pin codes provides");
+        }
         repository.createUser(credentials);
     }
 

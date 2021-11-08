@@ -1,16 +1,14 @@
 package com.insession.securityproject.web.routes.pin;
 
-import com.google.gson.Gson;
-import com.insession.securityproject.api.services.AuthPinCodeService;
 import com.insession.securityproject.api.services.UserService;
-import com.insession.securityproject.domain.user.*;
-import com.insession.securityproject.domain.pincode.PinCodeChannel;
+import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.UserCreationException;
+import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.cache.Redis;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,37 +40,19 @@ public class Multi extends RootServlet {
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            Integer email = Integer.parseInt(req.getParameter("email"));
-            Integer sms = Integer.parseInt(req.getParameter("sms"));
+            int email = Integer.parseInt(req.getParameter("email"));
+            int sms = Integer.parseInt(req.getParameter("sms"));
             HttpSession session = req.getSession(true);
             String username = (String) session.getAttribute("signupUsername");
-            AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
-            boolean isValidEmail = pinCodeService.isValidPinCode(username, PinCodeChannel.EMAIL, email);
-            boolean isValidSMS = pinCodeService.isValidPinCode(username, PinCodeChannel.SMS, sms);
-            if (!isValidEmail || !isValidSMS) {
-                return pinError(req);
-            }
             UserCredentials credentials = getUserCredentials(username, req, resp);
-            createUser(req, resp, credentials);
+            userService.signup(credentials, email, sms);
             session.setAttribute("userName", username);
             session.setAttribute("role", UserRole.USER);
             session.removeAttribute("signupUsername");
             return "/";
-        } catch (NumberFormatException e) {
-            return pinError(req);
-        }
-    }
-
-    private String pinError(HttpServletRequest req) {
-        req.setAttribute("error", "Invalid Email or SMS pin code");
-        return "/pin/multi";
-    }
-
-    private void createUser(HttpServletRequest req, HttpServletResponse resp, UserCredentials credentials) throws ServletException, IOException {
-        try {
-            userService.signup(credentials);
-        } catch (UserCreationException e) {
-            sendError(req, resp, "Unable to create your user... Please try again");
+        } catch (NumberFormatException | UserCreationException e) {
+            req.setAttribute("error", e.getMessage());
+            return "/pin/multi";
         }
     }
 
