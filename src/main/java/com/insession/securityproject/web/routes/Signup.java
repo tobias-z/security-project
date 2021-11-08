@@ -39,13 +39,14 @@ public class Signup extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String email = req.getParameter("email");
-        Integer phone = Integer.valueOf(req.getParameter("phone"));
-        String password = req.getParameter("password");
         HttpSession session = req.getSession(true);
         try {
-            validate(username, email, phone, password);
+            String username = req.getParameter("username");
+            String email = req.getParameter("email");
+            int phone = getPhone(req);
+            String password = req.getParameter("password");
+            String repeatedPassword = req.getParameter("repeatPassword");
+            validate(username, email, phone, password, repeatedPassword);
             if (userService.userExists(username, email)) {
                 throw new UserExistsException("A user with that username or email already exists");
             }
@@ -61,13 +62,34 @@ public class Signup extends RootServlet {
         }
     }
 
+    private int getPhone(HttpServletRequest req) throws InvalidKeysException {
+        InvalidKeysException invalidKeysException = new InvalidKeysException("Not a valid phone number");
+        try {
+            int phone = Integer.parseInt(req.getParameter("phone"));
+            if (countOfNumber(phone) != 8)
+                throw invalidKeysException;
+            return phone;
+        } catch (NumberFormatException e) {
+            throw invalidKeysException;
+        }
+    }
+
+    private int countOfNumber(int phone) {
+        int count = 0;
+        while (phone != 0) {
+            phone = phone / 10;
+            count++;
+        }
+        return count;
+    }
+
     private void cacheVariables(UserCredentials userCredentials) {
         try (Jedis jedis = Redis.getJedis()) {
             jedis.set(userCredentials.getUsername(), new Gson().toJson(userCredentials));
         }
     }
 
-    private void validate(String username, String email, Integer phone, String password) throws InvalidKeysException {
+    private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {
         String message = "Invalid input provided in field: ";
         if (!validateInput(username))
             throw new InvalidKeysException(message + "Username");
@@ -79,5 +101,7 @@ public class Signup extends RootServlet {
             throw new InvalidKeysException(message + "Password");
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
+        if (!password.equals(repeatedPassword))
+            throw new InvalidKeysException("The two passwords did not match");
     }
 }

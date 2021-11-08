@@ -2,6 +2,7 @@ package com.insession.securityproject.domain.user;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Whitelist {
 
