@@ -1,5 +1,6 @@
 package com.insession.securityproject.infrastructure.entities;
 import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -37,6 +38,14 @@ public class UserEntity {
         this.email = email;
         this.phone = phone;
         this.role = role;
+    }
+
+    public UserEntity(UserCredentials credentials) {
+        this.password = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt() + "pepper");
+        this.userName = credentials.getUsername();
+        this.email = credentials.getEmail();
+        this.phone = credentials.getPhone();
+        this.role = UserRole.USER;
     }
 
     public boolean verifyPassword(String pw){

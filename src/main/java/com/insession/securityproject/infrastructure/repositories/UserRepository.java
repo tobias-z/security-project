@@ -50,10 +50,10 @@ public class UserRepository implements IUserRepository {
     public void createUser(UserCredentials credentials) throws UserCreationException {
         EntityManager em = emf.createEntityManager();
         try {
-            UserEntity userEntity = new UserEntity(
-                    credentials.getUsername(), credentials.getPassword(), credentials.getEmail(), credentials.getPhone(), UserRole.USER
-            );
+            UserEntity userEntity = new UserEntity(credentials);
+            em.getTransaction().begin();
             em.persist(userEntity);
+            em.getTransaction().commit();
         } catch (Exception e) {
             throw new UserCreationException("Unable to create your user... Please try again");
         } finally {

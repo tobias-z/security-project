@@ -1,6 +1,5 @@
 package com.insession.securityproject.web.routes;
 
-import com.google.gson.Gson;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.DBConnection;
@@ -8,7 +7,6 @@ import com.insession.securityproject.infrastructure.cache.Redis;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -53,7 +51,7 @@ public class Signup extends RootServlet {
             User user = new User(username, UserRole.USER, email, phone);
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
-            cacheVariables(new UserCredentials(username, email, password, phone));
+            Redis.put(username, new UserCredentials(username, password, email, phone));
             session.setAttribute("signupUsername", username);
             return "/pin/multi";
         } catch (InvalidKeysException | UserExistsException e) {
@@ -81,12 +79,6 @@ public class Signup extends RootServlet {
             count++;
         }
         return count;
-    }
-
-    private void cacheVariables(UserCredentials userCredentials) {
-        try (Jedis jedis = Redis.getJedis()) {
-            jedis.set(userCredentials.getUsername(), new Gson().toJson(userCredentials));
-        }
     }
 
     private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {

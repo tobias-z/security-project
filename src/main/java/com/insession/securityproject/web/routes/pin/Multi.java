@@ -77,11 +77,9 @@ public class Multi extends RootServlet {
     }
 
     private UserCredentials getUserCredentials(String username, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        try (Jedis jedis = Redis.getJedis()) {
-            String jsonString = jedis.get(username);
-            if (jsonString == null)
-                sendError(req, res, "You dont have any user to login to");
-            return new Gson().fromJson(jsonString, UserCredentials.class);
-        }
+        UserCredentials credentials = Redis.get(username, UserCredentials.class);
+        if (credentials == null)
+            sendError(req, res, "You dont have any user to login to");
+        return credentials;
     }
 }
