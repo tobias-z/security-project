@@ -13,9 +13,10 @@ public class Log {
 
         public static void main(String[] args) {
             logger.debug("Debug log message");
+            //logger.consent("Info log message");
             logger.info("Info log message");
             logger.error("Error log message");
-            logger.fatal("");
-            logger.warn("");
+            //logger.fatal("");
+            logger.warn("What's up");
         }
     }

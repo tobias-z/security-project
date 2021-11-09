@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="File" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %msg%n"/>
         </Console>
-        <File name="File" fileName="log/log.log" append="true">
+
+
+        <File name="infoFile" fileName="log/info.log" append="true">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout>
-                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level - %msg%n</Pattern>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] <!-- %-5level --> - %msg%n</Pattern>
             </PatternLayout>
         </File>
+
+        <File name="errorFile" fileName="log/error.log" append="true">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] <!-- %-5level --> - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="debugFile" fileName="log/debug.log" append="true">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] <!-- %-5level --> - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+        <File name="warnFile" fileName="log/warn.log" append="true">
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] <!-- %-5level --> - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+
+
     </Appenders>
+
     <Loggers>
-        <Logger name="com.sematext.blog" level="info" additivity="true">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Root level="info">
+        <Logger name="com.security" level="info" additivity="true">
             <AppenderRef ref="File"/>
+        </Logger>
+
+        <Root level="all">
+            <AppenderRef ref="infoFile"/>
+            <AppenderRef ref="debugFile"/>
+            <AppenderRef ref="warnFile"/>
+            <AppenderRef ref="errorFile"/>
+
         </Root>
     </Loggers>
 </Configuration>
