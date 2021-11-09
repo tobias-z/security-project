@@ -31,7 +31,7 @@ public class Signup extends RootServlet {
     }
 
     @Override
-    public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public String loader(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         return "/signup";
     }
 
@@ -51,7 +51,7 @@ public class Signup extends RootServlet {
             User user = new User(username, UserRole.USER, email, phone);
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
-            Redis.put(username, new UserCredentials(username, password, email, phone));
+            Redis.getConnection().put(username, new UserCredentials(username, password, email, phone));
             session.setAttribute("signupUsername", username);
             return "/pin/multi";
         } catch (InvalidKeysException | UserExistsException e) {

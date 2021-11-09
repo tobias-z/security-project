@@ -57,7 +57,7 @@ public class Multi extends RootServlet {
     }
 
     private UserCredentials getUserCredentials(String username, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        UserCredentials credentials = Redis.get(username, UserCredentials.class);
+        UserCredentials credentials = Redis.getConnection().get(username, UserCredentials.class);
         if (credentials == null)
             sendError(req, res, "You dont have any user to login to");
         return credentials;
