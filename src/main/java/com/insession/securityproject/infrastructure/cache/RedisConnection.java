@@ -21,6 +21,11 @@ public class RedisConnection {
         String value = jedis.get(key);
         if (value == null)
             return null;
+        close();
         return GSON.fromJson(value, clazz);
+    }
+
+    public void close() {
+        this.jedis.close();
     }
 }

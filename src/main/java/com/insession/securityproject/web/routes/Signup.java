@@ -4,6 +4,7 @@ import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.cache.Redis;
+import com.insession.securityproject.infrastructure.cache.RedisConnection;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
@@ -51,7 +52,9 @@ public class Signup extends RootServlet {
             User user = new User(username, UserRole.USER, email, phone);
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
-            Redis.getConnection().put(username, new UserCredentials(username, password, email, phone));
+            Redis.getConnection()
+                    .put(username, new UserCredentials(username, password, email, phone))
+                    .close();
             session.setAttribute("signupUsername", username);
             return "/pin/multi";
         } catch (InvalidKeysException | UserExistsException e) {
