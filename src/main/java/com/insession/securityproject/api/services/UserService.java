@@ -6,6 +6,7 @@ import com.insession.securityproject.infrastructure.entities.UserEntity;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,8 +19,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class UserService implements IUserService {
+
     private final IUserRepository repository;
-    private Logger logger = LogManager.getLogger(UserService.class);
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     public UserService(IUserRepository repository) {
         this.repository = repository;
@@ -92,8 +94,6 @@ public class UserService implements IUserService {
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -128,6 +128,4 @@ public class UserService implements IUserService {
         // TODO: Make user entity have a UserRole
         return UserRole.USER;
     }
-
-
 }
