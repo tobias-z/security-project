@@ -8,7 +8,7 @@
           content="default-src 'self';
            img-src https://*; child-src 'none';
            script-src https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js;
-           style-src https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+           style-src https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css 'unsafe-inline'">
 
     <title>${requestScope.title}</title>
     <meta name="description" content="${requestScope.description}"/>
