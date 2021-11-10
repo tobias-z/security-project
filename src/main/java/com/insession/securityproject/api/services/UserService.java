@@ -118,7 +118,7 @@ public class UserService implements IUserService {
         if (!user.verifyPassword(password)) {
             throw new Exception("Not valid login");
         }
-        logger.info("Login" + user );
+        logger.info("Login: " + user.getUserName());
         return new User(user);
     }
 
