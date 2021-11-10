@@ -66,6 +66,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
+        req.changeSessionId();
         String redirectPath = action(req, resp);
         resp.sendRedirect(req.getContextPath() + redirectPath);
     }

@@ -2,6 +2,7 @@ package com.insession.securityproject.domain.user;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Whitelist {
 
@@ -31,6 +32,7 @@ public class Whitelist {
         for (int i = 0; i <= check.length() - 1; i++) {
             char c = check.charAt(i);
             if (!listVar.contains(c)) {
+                System.out.println(c);
                 return false;
             }
         }

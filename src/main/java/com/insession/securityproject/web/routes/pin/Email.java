@@ -1,12 +1,12 @@
-package com.insession.securityproject.web.routes.login.pin;
+package com.insession.securityproject.web.routes.pin;
 
 import com.insession.securityproject.api.services.AuthPinCodeService;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
-import com.insession.securityproject.infrastructure.entities.Connection;
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
+import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/login/pin/email")
+@WebServlet("/pin/email")
 public class Email extends RootServlet {
 
     private final IUserService userService = new UserService(
-            new UserRepository(Connection.getEmf())
+            new UserRepository(DBConnection.getEmf())
     );
 
     @Override
@@ -36,7 +36,7 @@ public class Email extends RootServlet {
         if (req.getSession().getAttribute("pinCodeUsername") == null) {
             super.sendError(req, resp, "You do not currently have a pin code that needs validating");
         }
-        return "/login/pin/email";
+        return "/pin/email";
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Email extends RootServlet {
 
             boolean isValidPinCode = AuthPinCodeService.getInstance().isValidPinCode(username, PinCodeChannel.EMAIL, pinCode);
             if (!isValidPinCode)
-                return "/login/pin/email";
+                return "/pin/email";
 
             setUserSessionVariables(session, username);
             return "/";

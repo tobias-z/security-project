@@ -1,8 +1,8 @@
 package com.insession.securityproject.infrastructure.entities;
-import com.insession.securityproject.domain.user.User;
+import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 
 
@@ -19,15 +19,33 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "phone")
+    private Integer phone;
+
+    @Column(name = "role")
+    private UserRole role;
+
 
     public UserEntity() {}
 
-    public UserEntity(String userName, String password, String email) {
+    public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
+        //TODO: MAKE PEPPER A ENV VARIABLE
         this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
         this.userName = userName;
         this.email = email;
+        this.phone = phone;
+        this.role = role;
+    }
+
+    public UserEntity(UserCredentials credentials) {
+        this.password = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt() + "pepper");
+        this.userName = credentials.getUsername();
+        this.email = credentials.getEmail();
+        this.phone = credentials.getPhone();
+        this.role = UserRole.USER;
     }
 
     public boolean verifyPassword(String pw){
@@ -64,5 +82,21 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
+        this.phone = phone;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
