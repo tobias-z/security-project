@@ -4,6 +4,7 @@ import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -28,6 +29,9 @@ public class UserEntity {
     @Column(name = "role")
     private UserRole role;
 
+    @Column(name = "last_active")
+    @Temporal(TemporalType.DATE)
+    private Date lastActive;
 
     public UserEntity() {}
 
@@ -38,6 +42,7 @@ public class UserEntity {
         this.email = email;
         this.phone = phone;
         this.role = role;
+        this.lastActive = new Date();
     }
 
     public UserEntity(UserCredentials credentials) {
@@ -46,6 +51,7 @@ public class UserEntity {
         this.email = credentials.getEmail();
         this.phone = credentials.getPhone();
         this.role = UserRole.USER;
+        this.lastActive = new Date();
     }
 
     public boolean verifyPassword(String pw){
@@ -98,5 +104,13 @@ public class UserEntity {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Date getLastActive() {
+        return lastActive;
+    }
+
+    public void updateActiveDate() {
+        this.lastActive = new Date();
     }
 }

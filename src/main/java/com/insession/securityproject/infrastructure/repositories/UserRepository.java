@@ -1,6 +1,8 @@
 package com.insession.securityproject.infrastructure.repositories;
 
-import com.insession.securityproject.domain.user.*;
+import com.insession.securityproject.domain.user.IUserRepository;
+import com.insession.securityproject.domain.user.UserCreationException;
+import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
@@ -19,9 +21,11 @@ public class UserRepository implements IUserRepository {
     public UserEntity getUserByUserName(String username) throws UserNotFoundException {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+            UserEntity userEntity = em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
                     .setParameter("username", username)
                     .getSingleResult();
+            userEntity.updateActiveDate();
+            return userEntity;
         } catch (Exception e) {
             throw new UserNotFoundException("Not valid login");
         } finally {
@@ -34,8 +38,11 @@ public class UserRepository implements IUserRepository {
     public boolean userExists(String username, String email) {
         EntityManager em = emf.createEntityManager();
         try {
-            UserEntity userEntity = em.createQuery("SELECT u FROM UserEntity u WHERE u.userName = :username OR u.email = :email", UserEntity.class)
-                    .setParameter("username", username)
+            UserEntity userEntity = em.createQuery(
+                            "SELECT u FROM UserEntity u " +
+                                    "WHERE u.userName = :username " +
+                                    "OR u.email = :email", UserEntity.class
+                    ).setParameter("username", username)
                     .setParameter("email", email)
                     .getSingleResult();
             return userEntity != null;
