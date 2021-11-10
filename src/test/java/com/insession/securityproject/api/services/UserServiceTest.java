@@ -24,16 +24,4 @@ class UserServiceTest {
     void yay() throws Exception {
         assertTrue(true);
     }
-
-    @Test
-    void sendMail() {
-        User user = new User("bob", UserRole.USER, "jensgelbek@gmail.com");
-        userService.sendPinMail(user);
-    }
-
-    @Test
-    void sendSMS() {
-        User user = new User("bob", UserRole.USER, "jensgelbek@gmail.com");
-        userService.sendPinSMS(user);
-    }
 }

@@ -4,10 +4,10 @@ import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
 import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
 
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +19,13 @@ import java.io.IOException;
 public class Login extends RootServlet {
 
     private final IUserService userService = new UserService(
-            new UserRepository(Persistence.createEntityManagerFactory("pu"))
+            new UserRepository(DBConnection.getEmf())
     );
 
     public void init() {
         this.title = "Login";
         this.description = "Login page";
-        this.roleAllowed = UserRole.NO_USER;
+        setRolesAllowed(UserRole.NO_USER);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Login extends RootServlet {
             userService.sendPinMail(user);
             session.setAttribute("pinCodeUsername", user.getUsername());
             session.removeAttribute("loginError");
-            return "/login/pin/email";
+            return "/pin/email";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             session.setAttribute("loginError", e.getMessage());

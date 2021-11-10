@@ -1,7 +1,8 @@
 package com.insession.securityproject.api.services;
 
+import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import com.insession.securityproject.domain.user.*;
-import com.insession.securityproject.domain.user.pincode.PinCodeChannel;
+import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -103,10 +104,9 @@ public class UserService implements IUserService {
 
         AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.SMS);
-        System.out.println(ACCOUNT_SID + " " + AUTH_TOKEN);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-                        new PhoneNumber("+4542733385"),
+                        new PhoneNumber("+45" + user.getPhone()),
                         new PhoneNumber("+13202881854"),
                         "Your one time Pin Code is: " + pinCode)
                 .create();
@@ -125,7 +125,22 @@ public class UserService implements IUserService {
     @Override
     public UserRole getUserRole(String username) throws UserNotFoundException {
         UserEntity userEntity = repository.getUserByUserName(username);
-        // TODO: Make user entity have a UserRole
-        return UserRole.USER;
+        return userEntity.getRole();
+    }
+
+    @Override
+    public void signup(UserCredentials credentials, int emailPin, int smsPin) throws UserCreationException {
+        AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
+        boolean isValidEmail = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.EMAIL, emailPin);
+        boolean isValidSMS = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.SMS, smsPin);
+        if (!isValidEmail || !isValidSMS) {
+            throw new UserCreationException("Invalid pin codes provides");
+        }
+        repository.createUser(credentials);
+    }
+
+    @Override
+    public boolean userExists(String username, String email) {
+        return repository.userExists(username, email);
     }
 }

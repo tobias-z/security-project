@@ -1,11 +1,12 @@
 package com.insession.securityproject.web.widgets;
 
-import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
 
-import java.util.*;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Navbar {
 
@@ -18,10 +19,11 @@ public class Navbar {
     private List<Item> getItems() {
         List<Item> items = new ArrayList<>();
         items.add(new Item("Home", "/", UserRole.USER, UserRole.NO_USER, UserRole.ADMIN));
-        items.add(new Item("Login", "/login", UserRole.NO_USER));
         items.add(new Item("Admin", "/admin", UserRole.ADMIN));
         items.add(new Item("Profile", "/profile", UserRole.USER));
         items.add(new Item("Products", "/products", UserRole.USER, UserRole.NO_USER));
+        items.add(new Item("Login", "/login", UserRole.NO_USER));
+        items.add(new Item("Sign up", "/signup", UserRole.NO_USER));
         return items;
     }
 
