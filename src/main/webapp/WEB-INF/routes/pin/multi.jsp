@@ -5,6 +5,9 @@
     <h1>Pin code - Multi</h1>
     <h4>Please check your email and SMS for the pin codes</h4>
 
+    <c:if test="${requestScope.error != null}">
+        <h4>${requestScope.error}</h4>
+    </c:if>
     <form class="row mt-3" method="post" style="width: 500px">
         <div class="col-12">
             <label for="sms" class="form-label">SMS - Pin Code</label>
