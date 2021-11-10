@@ -7,6 +7,9 @@ import com.insession.securityproject.infrastructure.entities.UserEntity;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -17,7 +20,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class UserService implements IUserService {
+
     private final IUserRepository repository;
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     public UserService(IUserRepository repository) {
         this.repository = repository;
@@ -90,8 +95,6 @@ public class UserService implements IUserService {
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -115,6 +118,7 @@ public class UserService implements IUserService {
         if (!user.verifyPassword(password)) {
             throw new Exception("Not valid login");
         }
+        logger.info("Login: " + user.getUserName());
         return new User(user);
     }
 
@@ -139,5 +143,4 @@ public class UserService implements IUserService {
     public boolean userExists(String username, String email) {
         return repository.userExists(username, email);
     }
-
 }

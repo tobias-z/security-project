@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <CustomLevels>
+        <CustomLevel name="CONSENT" intLevel="550" />
+    </CustomLevels>
+
+    <Appenders>
+
+        <Console name="File" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %msg%n"/>
+        </Console>
+
+        <File name="logFile" fileName="log/log.log" append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="infoFile" fileName="log/info.log" append="true">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="errorFile" fileName="log/error.log" append="true">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="debugFile" fileName="log/debug.log" append="true">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="warnFile" fileName="log/warn.log" append="true">
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+        <File name="fatalFile" fileName="log/fatal.log" append="true">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+
+        <File name="consentFile" fileName="log/consent.log" append="true">
+            <LevelRangeFilter minLevel="CONSENT" maxLevel="CONSENT" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="com.security" level="info" additivity="true">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Root level="all">
+            <AppenderRef ref="logFile"/>
+            <AppenderRef ref="infoFile"/>
+            <AppenderRef ref="debugFile"/>
+            <AppenderRef ref="warnFile"/>
+            <AppenderRef ref="errorFile"/>
+            <AppenderRef ref="fatalFile"/>
+            <AppenderRef ref="consentFile" level="consent"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
