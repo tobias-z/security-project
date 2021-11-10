@@ -5,7 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; img-src https://*; child-src 'none';">
+          content="default-src 'self';
+           img-src https://*; child-src 'none';
+           script-src https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js;
+           style-src https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 
     <title>${requestScope.title}</title>
     <meta name="description" content="${requestScope.description}"/>
