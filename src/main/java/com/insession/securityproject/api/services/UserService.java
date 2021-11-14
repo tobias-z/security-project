@@ -25,9 +25,6 @@ public class UserService implements IUserService {
 
     @Override
     public void sendPinMail( User user) {
-    // generates One time pin cocde and sends i to users email.
-        //Random rand = new Random();
-        //int pinCode= rand.nextInt(10000);
 
         AuthPinCodeService authPinCodeService=AuthPinCodeService.getInstance();
         int pinCode=authPinCodeService.getNewPinCode(user.getUsername());
@@ -98,16 +95,17 @@ public class UserService implements IUserService {
 
     @Override
     public void sendPinSMS(User user) {
+
         String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
         String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
-
+        String TWILIO_NUMBER=System.getenv("TWILIO_NUMBER");
         AuthPinCodeService authPinCodeService=AuthPinCodeService.getInstance();
         int pinCode=authPinCodeService.getNewPinCode(user.getUsername());
         System.out.println(ACCOUNT_SID+" "+AUTH_TOKEN);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
                         new PhoneNumber("+4542733385"),
-                        new PhoneNumber("+13202881854"),
+                        new PhoneNumber(TWILIO_NUMBER),
                         "Your one time Pin Code is: "+pinCode)
                   .create();
 
