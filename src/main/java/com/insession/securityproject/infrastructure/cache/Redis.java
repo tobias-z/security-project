@@ -4,7 +4,7 @@ import redis.clients.jedis.Jedis;
 
 public class Redis {
     private static Jedis getJedis() {
-        return new Jedis("localhost", 6379);
+        return new Jedis("redis", 6379);
     }
 
     public static RedisConnection getConnection() {
