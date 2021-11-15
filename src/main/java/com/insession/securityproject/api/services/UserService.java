@@ -91,6 +91,10 @@ public class UserService implements IUserService {
             System.out.println("sending...");
             // Send message
             Transport.send(message);
+
+            //log
+            logger.info("Mail pincode send: " + user.getUserName());
+
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
@@ -117,7 +121,10 @@ public class UserService implements IUserService {
         UserEntity user = repository.getUserByUserName(username);
         if (!user.verifyPassword(password)) {
             throw new Exception("Not valid login");
+            //log
+            logger.warn("Wrong password: " + user.getUserName());
         }
+        //log
         logger.info("Login: " + user.getUserName());
         return new User(user);
     }
