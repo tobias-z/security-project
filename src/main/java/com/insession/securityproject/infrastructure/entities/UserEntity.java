@@ -1,4 +1,5 @@
 package com.insession.securityproject.infrastructure.entities;
+
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
@@ -13,7 +14,7 @@ public class UserEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "user_name",length = 55, unique = true)
+    @Column(name = "user_name", length = 55, unique = true)
     private String userName;
 
     @Column(name = "password")
@@ -29,7 +30,8 @@ public class UserEntity {
     private UserRole role;
 
 
-    public UserEntity() {}
+    public UserEntity() {
+    }
 
     public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
         //TODO: MAKE PEPPER A ENV VARIABLE
@@ -48,7 +50,7 @@ public class UserEntity {
         this.role = UserRole.USER;
     }
 
-    public boolean verifyPassword(String pw){
+    public boolean verifyPassword(String pw) {
         return BCrypt.checkpw(pw, password);
     }
 
@@ -60,12 +62,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
     }
 
     public String getUserName() {

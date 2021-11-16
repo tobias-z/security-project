@@ -16,7 +16,7 @@ import java.util.List;
 
 
 public class TopicRepository extends BaseRepository implements ITopicRepository {
-    private static Logger logger = LogManager.getLogger(TopicRepository.class);
+    private static final Logger logger = LogManager.getLogger(TopicRepository.class);
 
     public TopicRepository(EntityManagerFactory emf) {
         super(emf);
@@ -38,8 +38,9 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
     public List<Topic> getTopics(int limit) throws NoTopicsFoundException {
         EntityManager em = emf.createEntityManager();
         try {
-            List<TopicEntity> topicEntities = em.createNativeQuery("SELECT * FROM topics ORDER BY created_at DESC LIMIT ?", TopicEntity.class)
-                    .setParameter(1, limit)
+            List<TopicEntity> topicEntities = em.createNativeQuery(
+                    "SELECT * FROM topic ORDER BY created_at ASC LIMIT ?", TopicEntity.class
+                    ).setParameter(1, limit)
                     .getResultList();
             return Topic.getTopics(topicEntities);
         } catch (Exception e) {
