@@ -18,8 +18,8 @@ public class UserRepository implements IUserRepository {
     @Override
     public UserEntity getUserByUserName(String username) throws UserNotFoundException {
         EntityManager em = emf.createEntityManager();
-        try {
-            return em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+            try {
+                return em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (Exception e) {
