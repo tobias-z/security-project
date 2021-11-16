@@ -8,5 +8,7 @@ public interface IUserRepository {
 
     boolean userExists(String username, String email);
 
-    void createUser(UserCredentials credentials) throws UserCreationException;
+    void createUser(UserCredentials userCredentials) throws UserCreationException;
+
+    void create(User user,String password)throws UserCreationException;
 }

@@ -19,7 +19,7 @@ public class Navbar {
     private List<Item> getItems() {
         List<Item> items = new ArrayList<>();
         items.add(new Item("Home", "/", UserRole.USER, UserRole.NO_USER, UserRole.ADMIN));
-        items.add(new Item("Admin", "/admin", UserRole.ADMIN));
+        items.add(new Item("CreateUser", "/createUser", UserRole.ADMIN));
         items.add(new Item("Profile", "/profile", UserRole.USER));
         items.add(new Item("Products", "/products", UserRole.USER, UserRole.NO_USER));
         items.add(new Item("Login", "/login", UserRole.NO_USER));

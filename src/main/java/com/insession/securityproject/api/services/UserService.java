@@ -140,6 +140,14 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void create(User user, String password) throws UserCreationException {
+        repository.create(user,password);
+    }
+
+
+
+
+    @Override
     public boolean userExists(String username, String email) {
         return repository.userExists(username, email);
     }

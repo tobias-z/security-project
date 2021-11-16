@@ -61,4 +61,19 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    @Override
+    public void create(User user,String password) throws UserCreationException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            UserEntity userEntity = new UserEntity(user.getUsername(), password, user.getUserEmail(), user.getPhone(), user.getUserRole());
+            em.getTransaction().begin();
+            em.persist(userEntity);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            throw new UserCreationException("Unable to create your user... Please try again");
+        } finally {
+            em.close();
+        }
+    }
+
 }

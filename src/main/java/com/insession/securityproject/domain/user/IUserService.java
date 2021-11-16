@@ -13,5 +13,7 @@ public interface IUserService {
 
     void signup(UserCredentials credentials, int emailPin, int smsPin) throws UserCreationException;
 
+    void create(User user,String password) throws UserCreationException;
+
     boolean userExists(String username, String email);
 }
