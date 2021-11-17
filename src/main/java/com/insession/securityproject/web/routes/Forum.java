@@ -2,8 +2,9 @@ package com.insession.securityproject.web.routes;
 
 import com.insession.securityproject.api.services.TopicService;
 import com.insession.securityproject.domain.topic.ITopicService;
+import com.insession.securityproject.domain.topic.InvalidTopicException;
 import com.insession.securityproject.domain.topic.NoTopicsFoundException;
-import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.TopicRepository;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/forum")
@@ -25,7 +27,7 @@ public class Forum extends RootServlet {
     public void init() throws ServletException {
         this.title = "The Forum";
         this.description = "Forum of this website. Relevant topics will be discussed";
-        this.setRolesAllowed(UserRole.USER);
+        this.setRolesAllowed(UserRole.NO_USER, UserRole.USER);
     }
 
     @Override
@@ -40,7 +42,18 @@ public class Forum extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+        try {
+            String topic = req.getParameter("topic");
+            HttpSession session = req.getSession();
+            String username = (String) session.getAttribute("userName");
+            topicService.createTopic(topic, username);
+            req.setAttribute("createdTopic", "Topic was successfully created");
+
+            // TODO: Send to created forum
+            return "/forum";
+        } catch (InvalidTopicException | UserNotFoundException e) {
+            req.setAttribute("topicError", e.getMessage());
+            return "/forum";
+        }
     }
 }

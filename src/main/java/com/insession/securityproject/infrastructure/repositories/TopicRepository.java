@@ -23,14 +23,14 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
     }
 
     @Override
-    public Topic createTopic(String message, String username) throws UserNotFoundException {
-        return super.requireUser(username, (user, em) -> {
+    public void createTopic(String message, String username) throws UserNotFoundException {
+        super.requireUser(username, (user, em) -> {
             TopicEntity topic = new TopicEntity(message, user);
             em.getTransaction().begin();
             em.persist(topic);
             em.getTransaction().commit();
             logger.info("Created new topic by: " + username);
-            return new Topic(topic);
+            return null;
         });
     }
 
@@ -46,6 +46,19 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
         } catch (Exception e) {
             logger.warn("No topics where found. Did someone remove them?");
             throw new NoTopicsFoundException("No topics where found");
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public Topic getTopic(int id) throws NoTopicsFoundException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TopicEntity entity = em.find(TopicEntity.class, id);
+            if (entity == null)
+                throw new NoTopicsFoundException("Did not find a topic with id: " + id);
+            return new Topic(entity);
         } finally {
             em.close();
         }

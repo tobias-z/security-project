@@ -10,8 +10,15 @@
         <ul class="list-group">
             <c:forEach var="topic" items="${requestScope.topics}">
                 <li class="list-group-item">
-                    <strong><p>${topic.message}</p></strong>
+                    <strong><p>${topic.user.username} - ${topic.createdAt}</p></strong>
                     <p>${topic.message}</p>
+
+                    <hr/>
+                    <div class="d-flex justify-content-end">
+                        <a href="${pageContext.request.contextPath}/forum/${topic.id}" class="text-secondary">
+                            21 Comments
+                        </a>
+                    </div>
                 </li>
             </c:forEach>
         </ul>

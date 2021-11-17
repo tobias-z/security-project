@@ -13,13 +13,17 @@ public class TopicService implements ITopicService {
     }
 
     @Override
-    public Topic createTopic(String message, String username) throws InvalidTopicException, UserNotFoundException {
-        //TODO: validate fields with new validation function
-        return repo.createTopic(message, username);
+    public void createTopic(String message, String username) throws InvalidTopicException, UserNotFoundException {
+        repo.createTopic(message, username);
     }
 
     @Override
     public List<Topic> getTopics() throws NoTopicsFoundException {
         return repo.getTopics(100);
+    }
+
+    @Override
+    public Topic getTopic(int id) throws NoTopicsFoundException {
+        return repo.getTopic(id);
     }
 }
