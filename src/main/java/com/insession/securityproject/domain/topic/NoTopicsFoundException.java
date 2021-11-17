@@ -1,6 +1,8 @@
 package com.insession.securityproject.domain.topic;
 
-public class NoTopicsFoundException extends Exception {
+import com.insession.securityproject.infrastructure.repositories.base.ActionException;
+
+public class NoTopicsFoundException extends ActionException {
     public NoTopicsFoundException(String message) {
         super(message);
     }

@@ -2,7 +2,9 @@ package com.insession.securityproject.infrastructure.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "topic")
@@ -20,13 +22,17 @@ public class TopicEntity implements Serializable {
     @Column(name = "message", columnDefinition = "TEXT")
     private String message;
 
-    @JoinColumn(name = "user")
     @ManyToOne
+    @JoinColumn(name = "user")
     private UserEntity user;
 
-    @Column(name = "created_at")
     @Temporal(TemporalType.DATE)
+    @Column(name = "created_at")
     private Date createdAt;
+
+    @OneToMany(mappedBy = "topicEntity", cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "comments")
+    private List<CommentEntity> commentEntities;
 
     public TopicEntity() {
     }
@@ -35,6 +41,14 @@ public class TopicEntity implements Serializable {
         this.message = message;
         this.user = user;
         this.createdAt = new Date();
+        this.commentEntities = new ArrayList<>();
+    }
+
+    public void addComment(CommentEntity comment) {
+        if (comment != null) {
+            this.commentEntities.add(comment);
+            comment.setTopicEntity(this);
+        }
     }
 
     public void setId(Integer id) {
@@ -67,5 +81,9 @@ public class TopicEntity implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<CommentEntity> getCommentEntities() {
+        return commentEntities;
     }
 }

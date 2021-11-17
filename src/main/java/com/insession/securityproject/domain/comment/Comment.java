@@ -1,38 +1,40 @@
-package com.insession.securityproject.domain.topic;
+package com.insession.securityproject.domain.comment;
 
-import com.insession.securityproject.domain.comment.Comment;
+import com.insession.securityproject.domain.topic.Topic;
 import com.insession.securityproject.domain.user.User;
-import com.insession.securityproject.infrastructure.entities.TopicEntity;
+import com.insession.securityproject.infrastructure.entities.CommentEntity;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Topic {
+public class Comment {
     private Integer id;
     private String message;
     private User user;
     private String createdAt;
-    private List<Comment> comments;
 
-    public Topic() {
-    }
-
-    public Topic(TopicEntity entity) {
+    public Comment(CommentEntity entity) {
         this.id = entity.getId();
         this.message = entity.getMessage();
-        this.user = new User(entity.getUser());
+        this.user = new User(entity.getUserEntity());
         Format formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.createdAt = formatter.format(entity.getCreatedAt().getTime());
-        this.comments = Comment.getComments(entity.getCommentEntities());
     }
 
-    public static List<Topic> getTopics(List<TopicEntity> entities) {
-        return entities.stream()
-                .map(Topic::new)
+    public static List<Comment> getComments(List<CommentEntity> commentEntities) {
+        return commentEntities.stream()
+                .map(Comment::new)
                 .collect(Collectors.toList());
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getMessage() {
@@ -51,27 +53,11 @@ public class Topic {
         this.user = user;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }

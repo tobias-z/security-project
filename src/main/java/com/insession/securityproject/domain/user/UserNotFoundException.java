@@ -1,6 +1,8 @@
 package com.insession.securityproject.domain.user;
 
-public class UserNotFoundException extends Exception {
+import com.insession.securityproject.infrastructure.repositories.base.ActionException;
+
+public class UserNotFoundException extends ActionException {
     public UserNotFoundException(String message) {
         super(message);
     }

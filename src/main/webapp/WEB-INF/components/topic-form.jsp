@@ -1,7 +1,7 @@
-<form method="post">
-  <div class="mb-3">
-    <label for="topic" class="form-label">New Topic</label>
-    <textarea class="form-control" id="topic" name="topic" placeholder="Enter a new topic" rows="3"></textarea>
+<form method="post" class="mt-4">
+  <div class="input-group">
+    <label for="topic" class="form-label"></label>
+    <textarea class="form-control" id="topic" name="topic" placeholder="Enter a new topic" rows="1"></textarea>
+    <button type="submit" class="btn btn-primary">Create topic</button>
   </div>
-  <button type="submit" class="btn btn-primary">Create topic</button>
 </form>

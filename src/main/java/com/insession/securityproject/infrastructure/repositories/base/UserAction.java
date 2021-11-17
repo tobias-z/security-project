@@ -6,5 +6,5 @@ import javax.persistence.EntityManager;
 
 @FunctionalInterface
 public interface UserAction<T> {
-    T commit(UserEntity userEntity, EntityManager em);
+    T commit(UserEntity userEntity, EntityManager em) throws ActionException;
 }

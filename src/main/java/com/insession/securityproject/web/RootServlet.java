@@ -36,6 +36,10 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         return "/404";
     }
 
+    protected String getUserName(HttpSession session) {
+        return (String) session.getAttribute("userName");
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

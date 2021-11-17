@@ -44,8 +44,7 @@ public class Forum extends RootServlet {
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String topic = req.getParameter("topic");
-            HttpSession session = req.getSession();
-            String username = (String) session.getAttribute("userName");
+            String username = getUserName(req.getSession());
             topicService.createTopic(topic, username);
             req.setAttribute("createdTopic", "Topic was successfully created");
 

@@ -5,6 +5,7 @@ import com.insession.securityproject.infrastructure.entities.UserEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 
 public class BaseRepository {
     protected final EntityManagerFactory emf;
@@ -13,7 +14,7 @@ public class BaseRepository {
         this.emf = emf;
     }
 
-    protected <T> T requireUser(String username, UserAction<T> action) throws UserNotFoundException {
+    protected <T> T requireUser(String username, UserAction<T> action) throws ActionException {
         EntityManager em = emf.createEntityManager();
         try {
             UserEntity userEntity = em.createQuery(
@@ -21,7 +22,7 @@ public class BaseRepository {
                     ).setParameter("u", username)
                     .getSingleResult();
             return action.commit(userEntity, em);
-        } catch(Exception e) {
+        } catch(NoResultException e) {
             throw new UserNotFoundException("Did not find user with username: " + username);
         } finally {
             em.close();

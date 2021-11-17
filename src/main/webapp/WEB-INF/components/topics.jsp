@@ -16,7 +16,7 @@
                     <hr/>
                     <div class="d-flex justify-content-end">
                         <a href="${pageContext.request.contextPath}/forum/${topic.id}" class="text-secondary">
-                            21 Comments
+                            ${topic.comments.size()} Comments
                         </a>
                     </div>
                 </li>

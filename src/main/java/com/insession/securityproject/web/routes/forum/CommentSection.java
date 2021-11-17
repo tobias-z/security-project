@@ -6,12 +6,14 @@ import com.insession.securityproject.domain.topic.NoTopicsFoundException;
 import com.insession.securityproject.domain.topic.Topic;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.TopicRepository;
+import com.insession.securityproject.infrastructure.repositories.base.ActionException;
 import com.insession.securityproject.web.RootServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/forum/*")
@@ -48,7 +50,20 @@ public class CommentSection extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //TODO (tz): implement this!
-        throw new UnsupportedOperationException("Not yet implemented!");
+        int id = getId(req);
+        if (id == -1) return "/forum";
+
+        HttpSession session = req.getSession();
+        try {
+            String username = getUserName(session);
+            String comment = req.getParameter("comment");
+            topicService.addCommentToTopic(comment, username, id);
+            session.removeAttribute("commentError");
+        } catch (ActionException e) {
+            session.setAttribute("commentError", e.getMessage());
+        }
+
+        return "/forum/" + id;
     }
+
 }
