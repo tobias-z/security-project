@@ -17,6 +17,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class UserService implements IUserService {
@@ -144,7 +146,15 @@ public class UserService implements IUserService {
         repository.create(user,password);
     }
 
-
+    @Override
+    public List<User> getAll() throws UserNotFoundException {
+        List<UserEntity> entityList=repository.getAllUsers();
+        List<User> returnList=new ArrayList<>();
+        for (UserEntity user:entityList) {
+            returnList.add(new User(user));
+        }
+        return returnList;
+    }
 
 
     @Override

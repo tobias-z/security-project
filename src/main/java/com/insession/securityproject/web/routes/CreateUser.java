@@ -27,7 +27,7 @@ public class CreateUser extends RootServlet {
 
     @Override
     public void init() throws ServletException {
-        this.title = "Sign up";
+        this.title = " Create User";
         this.description = "Create a new user";
         this.setRolesAllowed(UserRole.ADMIN);
     }

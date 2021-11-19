@@ -1,5 +1,7 @@
 package com.insession.securityproject.web;
 
+import com.insession.securityproject.domain.user.UserNotFoundException;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

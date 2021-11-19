@@ -7,6 +7,8 @@ import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
+import java.util.List;
+
 public class MockUserRepository implements IUserRepository {
 
     @Override
@@ -29,5 +31,10 @@ public class MockUserRepository implements IUserRepository {
     @Override
     public void create(User user, String password) throws UserCreationException {
 
+    }
+
+    @Override
+    public List<UserEntity> getAllUsers() {
+        return null;
     }
 }
