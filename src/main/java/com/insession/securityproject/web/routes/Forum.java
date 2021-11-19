@@ -27,7 +27,7 @@ public class Forum extends RootServlet {
     public void init() throws ServletException {
         this.title = "The Forum";
         this.description = "Forum of this website. Relevant topics will be discussed";
-        this.setRolesAllowed(UserRole.NO_USER, UserRole.USER);
+        this.setRolesAllowed(UserRole.USER);
     }
 
     @Override

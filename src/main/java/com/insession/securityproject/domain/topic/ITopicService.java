@@ -2,7 +2,6 @@ package com.insession.securityproject.domain.topic;
 
 import com.insession.securityproject.domain.comment.InvalidCommentException;
 import com.insession.securityproject.domain.user.UserNotFoundException;
-import com.insession.securityproject.infrastructure.repositories.base.ActionException;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ public interface ITopicService {
     Topic getTopic(int id) throws NoTopicsFoundException;
 
     void addCommentToTopic(String comment, String username, int topicId)
-            throws ActionException, InvalidCommentException;
+            throws UserNotFoundException, InvalidCommentException, NoTopicsFoundException;
 }

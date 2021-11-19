@@ -1,12 +1,14 @@
 package com.insession.securityproject.web.routes.forum;
 
 import com.insession.securityproject.api.services.TopicService;
+import com.insession.securityproject.domain.comment.InvalidCommentException;
 import com.insession.securityproject.domain.topic.ITopicService;
 import com.insession.securityproject.domain.topic.NoTopicsFoundException;
 import com.insession.securityproject.domain.topic.Topic;
+import com.insession.securityproject.domain.user.UserNotFoundException;
+import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.TopicRepository;
-import com.insession.securityproject.infrastructure.repositories.base.ActionException;
 import com.insession.securityproject.web.RootServlet;
 
 import javax.servlet.ServletException;
@@ -23,6 +25,13 @@ public class CommentSection extends RootServlet {
     );
 
     @Override
+    public void init() throws ServletException {
+        this.title = "Comment section";
+        this.description = "The comment section of a topic";
+        this.setRolesAllowed(UserRole.USER);
+    }
+
+    @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             int id = getId(req);
@@ -31,8 +40,7 @@ public class CommentSection extends RootServlet {
             req.setAttribute("topic", topic);
             return "/forum/comment-section";
         } catch (NoTopicsFoundException e) {
-            req.setAttribute("noTopics", e.getMessage());
-            return "/forum";
+            return super.sendError(req, resp, e.getMessage());
         }
     }
 
@@ -59,7 +67,7 @@ public class CommentSection extends RootServlet {
             String comment = req.getParameter("comment");
             topicService.addCommentToTopic(comment, username, id);
             session.removeAttribute("commentError");
-        } catch (ActionException e) {
+        } catch (UserNotFoundException | InvalidCommentException | NoTopicsFoundException e) {
             session.setAttribute("commentError", e.getMessage());
         }
 

@@ -2,30 +2,23 @@ package com.insession.securityproject.infrastructure.repositories.base;
 
 import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
 
 public class BaseRepository {
-    protected final EntityManagerFactory emf;
+    private static final Logger logger = LogManager.getLogger(BaseRepository.class);
 
-    public BaseRepository(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-
-    protected <T> T requireUser(String username, UserAction<T> action) throws ActionException {
-        EntityManager em = emf.createEntityManager();
+    protected UserEntity getUserEntity(String username, EntityManager em) throws UserNotFoundException {
         try {
-            UserEntity userEntity = em.createQuery(
+            return em.createQuery(
                             "SELECT u FROM UserEntity u WHERE u.userName = :u", UserEntity.class
                     ).setParameter("u", username)
                     .getSingleResult();
-            return action.commit(userEntity, em);
-        } catch(NoResultException e) {
+        } catch(Exception e) {
+            logger.warn("User: " + username + " was requested. But none existent");
             throw new UserNotFoundException("Did not find user with username: " + username);
-        } finally {
-            em.close();
         }
     }
 }

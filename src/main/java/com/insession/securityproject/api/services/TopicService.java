@@ -1,7 +1,8 @@
 package com.insession.securityproject.api.services;
 
+import com.insession.securityproject.domain.comment.InvalidCommentException;
 import com.insession.securityproject.domain.topic.*;
-import com.insession.securityproject.infrastructure.repositories.base.ActionException;
+import com.insession.securityproject.domain.user.UserNotFoundException;
 
 import java.util.List;
 
@@ -13,12 +14,10 @@ public class TopicService implements ITopicService {
     }
 
     @Override
-    public void createTopic(String message, String username) throws InvalidTopicException {
-        try {
-            repo.createTopic(message, username);
-        } catch (com.insession.securityproject.infrastructure.repositories.base.ActionException e) {
-            e.printStackTrace();
-        }
+    public void createTopic(String message, String username) throws InvalidTopicException, UserNotFoundException {
+        NullValidatorService.validateField(message, "message", InvalidTopicException.class);
+        NullValidatorService.validateField(username, "username", UserNotFoundException.class);
+        repo.createTopic(message, username);
     }
 
     @Override
@@ -32,7 +31,11 @@ public class TopicService implements ITopicService {
     }
 
     @Override
-    public void addCommentToTopic(String comment, String username, int topicId) throws ActionException {
+    public void addCommentToTopic(String comment, String username, int topicId) throws InvalidCommentException, UserNotFoundException, NoTopicsFoundException {
+        NullValidatorService.validateField(comment, "comment", InvalidCommentException.class);
+        NullValidatorService.validateField(username, "username", UserNotFoundException.class);
         repo.addCommentToTopic(comment, username, topicId);
     }
+
+
 }
