@@ -21,6 +21,10 @@ jobs:
           mysql database: 'startcode_test' 
           mysql user: 'dev' 
           mysql password: 'ax2'
+      - name: redis
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: 6
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
