@@ -14,7 +14,7 @@ public class Populator {
         try {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM UserEntity").executeUpdate();
-            em.persist(new UserEntity("bob", "theBuilder", "tobias.zimmer007@gmail.com", 3213131, UserRole.USER));
+            em.persist(new UserEntity("j", "", "jensgelbek@gmail.com", 42733385, UserRole.ADMIN));
             em.getTransaction().commit();
         } finally {
             em.close();
