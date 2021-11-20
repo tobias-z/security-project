@@ -38,7 +38,6 @@ public class AuthPinCodeService {
             Map<PinCodeChannel, Integer> channels = pinCodes.get(username);
             if (channels == null) return false;
             Integer thePinCode = channels.get(channel);
-            //log
             if (thePinCode == null || !thePinCode.equals(pinCode)) {
                 //log
                 logger.warn("False pincode: " + username + " " + channel);

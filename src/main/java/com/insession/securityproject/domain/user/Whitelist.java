@@ -65,7 +65,7 @@ public class Whitelist {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(check);
 
-        if (check == null || !m.matches()) {
+        if (!m.matches()) {
             return false;
         }
         return true;

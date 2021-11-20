@@ -89,27 +89,33 @@ public class Signup extends RootServlet {
 
     private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {
         String message = "Invalid input provided in field: ";
-        if (!validateInput(username))
-            throw new InvalidKeysException(message + "Username");
+        if (!validateInput(username)) {
             //log
             logger.info("Wrong username input: " + username);
-        if (!validateEmail(email))
+            throw new InvalidKeysException(message + "Username");
+        }
+        if (!validateEmail(email)) {
+            //log
+            logger.warn("Wrong email input: " + email);
             throw new InvalidKeysException(message + "Email");
+        }
+        if (!validateInput(String.valueOf(phone))) {
             //log
-            logger.info("Wrong email input: " + email);
-        if (!validateInput(String.valueOf(phone)))
+            logger.warn("Wrong phone input: " + phone);
             throw new InvalidKeysException(message + "Phone Number");
+        }
+        if (!validateInput(password)) {
             //log
-            logger.info("Wrong phone input: " + phone);
-        if (!validateInput(password))
+            logger.warn("Wrong password input: " + password);
             throw new InvalidKeysException(message + "Password");
-            //log
-            logger.info("Wrong password input: " + password);
+        }
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
-        if (!password.equals(repeatedPassword))
-            throw new InvalidKeysException("The two passwords did not match");
+        if (!password.equals(repeatedPassword)) {
             //log
-            logger.info("Wrong repeatedPassword input: " + repeatedPassword);
+            logger.warn("Wrong repeatedPassword input: " + repeatedPassword);
+            throw new InvalidKeysException("The two passwords did not match");
+        }
+
     }
 }
