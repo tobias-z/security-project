@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
+
 public class UserRepository implements IUserRepository {
 
     private final EntityManagerFactory emf;
@@ -85,6 +86,26 @@ public class UserRepository implements IUserRepository {
                     .getResultList();
         } catch (Exception e) {
             throw new UserNotFoundException("No Users found");
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void deleteUserByUserName(String username) throws UserNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        System.out.println("deletetttttt"+username);
+        try {
+            UserEntity userEntity=em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            em.getTransaction().begin();
+            em.remove(userEntity);
+            em.getTransaction().commit();
+            return;
+        } catch (Exception e) {
+            System.out.println("catch");
+            return ;
         } finally {
             em.close();
         }

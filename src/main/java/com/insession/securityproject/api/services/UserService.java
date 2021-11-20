@@ -161,4 +161,9 @@ public class UserService implements IUserService {
     public boolean userExists(String username, String email) {
         return repository.userExists(username, email);
     }
+
+    @Override
+    public void deleteUserByUserName(String username) throws UserNotFoundException {
+        repository.deleteUserByUserName(username);
+    }
 }

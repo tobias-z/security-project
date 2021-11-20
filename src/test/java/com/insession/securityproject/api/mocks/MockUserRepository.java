@@ -1,9 +1,6 @@
 package com.insession.securityproject.api.mocks;
 
-import com.insession.securityproject.domain.user.IUserRepository;
-import com.insession.securityproject.domain.user.User;
-import com.insession.securityproject.domain.user.UserCreationException;
-import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
@@ -36,5 +33,10 @@ public class MockUserRepository implements IUserRepository {
     @Override
     public List<UserEntity> getAllUsers() {
         return null;
+    }
+
+    @Override
+    public void deleteUserByUserName(String username) throws UserNotFoundException {
+
     }
 }

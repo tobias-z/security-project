@@ -20,4 +20,6 @@ public interface IUserService {
     List<User> getAll() throws UserNotFoundException;
 
     boolean userExists(String username, String email);
+
+    void deleteUserByUserName(String username) throws UserNotFoundException;
 }
