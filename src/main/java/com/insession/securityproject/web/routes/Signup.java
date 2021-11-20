@@ -8,6 +8,8 @@ import com.insession.securityproject.infrastructure.cache.RedisConnection;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +25,7 @@ import static com.insession.securityproject.domain.user.Whitelist.validateInput;
 public class Signup extends RootServlet {
 
     private static final IUserService userService = new UserService(new UserRepository(DBConnection.getEmf()));
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     @Override
     public void init() throws ServletException {
@@ -86,17 +89,33 @@ public class Signup extends RootServlet {
 
     private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {
         String message = "Invalid input provided in field: ";
-        if (!validateInput(username))
+        if (!validateInput(username)) {
+            //log
+            logger.info("Wrong username input: " + username);
             throw new InvalidKeysException(message + "Username");
-        if (!validateEmail(email))
+        }
+        if (!validateEmail(email)) {
+            //log
+            logger.warn("Wrong email input: " + email);
             throw new InvalidKeysException(message + "Email");
-        if (!validateInput(String.valueOf(phone)))
+        }
+        if (!validateInput(String.valueOf(phone))) {
+            //log
+            logger.warn("Wrong phone input: " + phone);
             throw new InvalidKeysException(message + "Phone Number");
-        if (!validateInput(password))
+        }
+        if (!validateInput(password)) {
+            //log
+            logger.warn("Wrong password input: " + password);
             throw new InvalidKeysException(message + "Password");
+        }
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
-        if (!password.equals(repeatedPassword))
+        if (!password.equals(repeatedPassword)) {
+            //log
+            logger.warn("Wrong repeatedPassword input: " + repeatedPassword);
             throw new InvalidKeysException("The two passwords did not match");
+        }
+
     }
 }

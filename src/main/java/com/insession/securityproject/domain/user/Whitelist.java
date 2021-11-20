@@ -1,8 +1,8 @@
 package com.insession.securityproject.domain.user;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Whitelist {
 
@@ -15,6 +15,8 @@ public class Whitelist {
         allChars.add('Æ');
         allChars.add('Ø');
         allChars.add('Å');
+        allChars.add('_');
+        allChars.add('-');
 
         for(char cu = 'A'; cu <= 'Z'; cu++) {
             allChars.add(cu);
@@ -49,5 +51,29 @@ public class Whitelist {
         listVar.add('.');
         return validate(email, listVar) && (email.contains("@") && email.contains("."));
     }
+
+
+    // File extension validation
+    private static boolean validateImageFileExtensions(String check) {
+
+        // Algorithm from
+        // https://www.geeksforgeeks.org/how-to-validate-image-file-extension-using-regular-expression/
+
+        // Regex to check valid image file extension.
+        String regex  = "([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)";
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(check);
+
+        if (!m.matches()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateImageFile(String check) {
+        return validateImageFileExtensions(check);
+    }
+
 
 }

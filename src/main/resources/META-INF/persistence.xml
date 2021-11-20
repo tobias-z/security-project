@@ -18,7 +18,6 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/security"/>
             <property name="javax.persistence.jdbc.user" value="dev"/>
             <property name="javax.persistence.jdbc.password" value="ax2"/>
-
         </properties>
     </persistence-unit>
 

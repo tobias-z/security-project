@@ -1,6 +1,8 @@
 package com.insession.securityproject.api.services;
 
 import com.insession.securityproject.domain.pincode.PinCodeChannel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ public class AuthPinCodeService {
             instance = new AuthPinCodeService();
         return instance;
     }
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     private final Map<String, Map<PinCodeChannel, Integer>> pinCodes;
 
@@ -35,7 +38,11 @@ public class AuthPinCodeService {
             Map<PinCodeChannel, Integer> channels = pinCodes.get(username);
             if (channels == null) return false;
             Integer thePinCode = channels.get(channel);
-            if (thePinCode == null || !thePinCode.equals(pinCode)) return false;
+            if (thePinCode == null || !thePinCode.equals(pinCode)) {
+                //log
+                logger.warn("False pincode: " + username + " " + channel);
+                return false;
+            }
             channels.remove(channel);
             return true;
         }
