@@ -93,7 +93,7 @@ public class UserService implements IUserService {
             Transport.send(message);
 
             //log
-            logger.info("Mail pincode send: " + user.getUserName());
+            // logger.info("Mail pincode send: " + user.getUserName());
 
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
@@ -120,9 +120,9 @@ public class UserService implements IUserService {
     public User login(String username, String password) throws Exception {
         UserEntity user = repository.getUserByUserName(username);
         if (!user.verifyPassword(password)) {
-            throw new Exception("Not valid login");
             //log
             logger.warn("Wrong password: " + user.getUserName());
+            throw new Exception("Not valid login");
         }
         //log
         logger.info("Login: " + user.getUserName());

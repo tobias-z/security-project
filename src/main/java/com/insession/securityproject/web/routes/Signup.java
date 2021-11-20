@@ -8,6 +8,8 @@ import com.insession.securityproject.infrastructure.cache.RedisConnection;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +25,7 @@ import static com.insession.securityproject.domain.user.Whitelist.validateInput;
 public class Signup extends RootServlet {
 
     private static final IUserService userService = new UserService(new UserRepository(DBConnection.getEmf()));
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     @Override
     public void init() throws ServletException {
@@ -88,15 +91,25 @@ public class Signup extends RootServlet {
         String message = "Invalid input provided in field: ";
         if (!validateInput(username))
             throw new InvalidKeysException(message + "Username");
+            //log
+            logger.info("Wrong username input: " + username);
         if (!validateEmail(email))
             throw new InvalidKeysException(message + "Email");
+            //log
+            logger.info("Wrong email input: " + email);
         if (!validateInput(String.valueOf(phone)))
             throw new InvalidKeysException(message + "Phone Number");
+            //log
+            logger.info("Wrong phone input: " + phone);
         if (!validateInput(password))
             throw new InvalidKeysException(message + "Password");
+            //log
+            logger.info("Wrong password input: " + password);
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
         if (!password.equals(repeatedPassword))
             throw new InvalidKeysException("The two passwords did not match");
+            //log
+            logger.info("Wrong repeatedPassword input: " + repeatedPassword);
     }
 }
