@@ -1,6 +1,7 @@
 package com.insession.securityproject.domain.user;
 
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
+import com.insession.securityproject.infrastructure.entities.UserEntity;
 
 import java.util.List;
 
@@ -22,4 +23,9 @@ public interface IUserService {
     boolean userExists(String username, String email);
 
     void deleteUserByUserName(String username) throws UserNotFoundException;
+
+    void editUserName(String usertoedit);
+
+    User getUserByUserName(String username) throws UserNotFoundException;
+
 }

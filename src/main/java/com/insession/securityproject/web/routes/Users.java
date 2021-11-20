@@ -69,6 +69,11 @@ public class Users extends RootServlet {
             if (usertodelete!=null){
                 userService.deleteUserByUserName(usertodelete);
             }
+            if (usertoedit!=null){
+                //userService.editUserName(usertoedit);
+                session.setAttribute("usertoedit", usertoedit);
+                return "/edituser";
+            }
             return "/users";
         } catch (Exception e) {
             session.setAttribute("signupError", e.getMessage());

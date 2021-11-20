@@ -166,4 +166,14 @@ public class UserService implements IUserService {
     public void deleteUserByUserName(String username) throws UserNotFoundException {
         repository.deleteUserByUserName(username);
     }
+
+    @Override
+    public void editUserName(String usertoedit) {
+
+    }
+
+    @Override
+    public User getUserByUserName(String username) throws UserNotFoundException {
+        return new User(repository.getUserByUserName(username));
+    }
 }
