@@ -46,7 +46,7 @@ public class Email extends RootServlet {
             String username = (String) session.getAttribute("pinCodeUsername");
             Integer pinCode = getPinCode(req);
 
-            boolean isValidPinCode = AuthPinCodeService.getInstance().isValidPinCode(username, PinCodeChannel.EMAIL, pinCode);
+            boolean isValidPinCode = new AuthPinCodeService().isValidPinCode(username, PinCodeChannel.EMAIL, pinCode);
             if (!isValidPinCode)
                 return "/pin/email";
 

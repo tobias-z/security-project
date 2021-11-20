@@ -25,6 +25,11 @@ public class RedisConnection {
         return GSON.fromJson(value, clazz);
     }
 
+    public RedisConnection pop(String key) {
+        jedis.del(key);
+        return this;
+    }
+
     public void close() {
         this.jedis.close();
     }
