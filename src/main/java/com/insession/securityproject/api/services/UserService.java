@@ -35,7 +35,7 @@ public class UserService implements IUserService {
     @Override
     public void sendPinMail(User user) {
         // generates One time pin cocde and sends i to users email.
-        AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService authPinCodeService = new AuthPinCodeService();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.EMAIL);
 
         // Recipient's email ID needs to be mentioned.
@@ -108,7 +108,7 @@ public class UserService implements IUserService {
         String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
         String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
 
-        AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService authPinCodeService = new AuthPinCodeService();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.SMS);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
@@ -139,7 +139,7 @@ public class UserService implements IUserService {
 
     @Override
     public void signup(UserCredentials credentials, int emailPin, int smsPin) throws UserCreationException {
-        AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService pinCodeService = new AuthPinCodeService();
         boolean isValidEmail = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.EMAIL, emailPin);
         boolean isValidSMS = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.SMS, smsPin);
         if (!isValidEmail || !isValidSMS) {

@@ -12,7 +12,7 @@ class AuthPinCodeServiceTest {
 
     @BeforeEach
     void setUp() {
-        authTokenService = AuthPinCodeService.getInstance();
+        authTokenService = new AuthPinCodeService();
     }
 
     @Test
