@@ -36,6 +36,10 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         return "/404";
     }
 
+    protected String getUserName(HttpSession session) {
+        return (String) session.getAttribute("userName");
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -65,6 +69,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        init();
         new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
         req.changeSessionId();
         String redirectPath = action(req, resp);

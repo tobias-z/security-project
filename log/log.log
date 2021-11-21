@@ -1,0 +1,18 @@
+2021-11-16 22:22:58 WARN  TopicRepository:47 - No topics where found. Did someone remove them?
+2021-11-20 14:38:00 ERROR TopicRepository:110 - User: t1 tried to remove topic with id: 2 but was not allowed
+2021-11-20 15:48:00 ERROR TopicRepository:110 - User: t1 tried to remove topic with id: 2 but was not allowed
+2021-11-20 19:39:23 ERROR TopicRepository:111 - User: t1 tried to remove topic with id: 3 but was not allowed
+2021-11-20 19:41:43 ERROR TopicRepository:133 - User: thebuilder tried to remove comment with id: 1 but was not allowed
+2021-11-20 19:44:38 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-20 19:44:38 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-20 19:44:39 ERROR TopicRepository:111 - User: t1 tried to remove topic with id: 3 but was not allowed
+2021-11-21 13:40:31 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:40:31 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:40:32 ERROR TopicRepository:111 - User: t1 tried to remove topic with id: 3 but was not allowed
+2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:41:16 ERROR TopicRepository:111 - User: t1 tried to remove topic with id: 3 but was not allowed
+2021-11-21 13:57:55 ERROR TopicRepository:133 - User: t1 tried to remove comment with id: 3 but was not allowed
+2021-11-21 13:59:45 WARN  BaseRepository:20 - User: admin was requested. But none existent
+2021-11-21 14:00:37 ERROR TopicRepository:111 - User: t1 tried to remove topic with id: 1 but was not allowed
+2021-11-21 14:00:37 ERROR TopicRepository:133 - User: t1 tried to remove comment with id: 9 but was not allowed

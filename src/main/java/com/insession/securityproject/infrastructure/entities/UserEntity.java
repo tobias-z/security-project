@@ -1,10 +1,13 @@
 package com.insession.securityproject.infrastructure.entities;
+
 import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -14,7 +17,7 @@ public class UserEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "user_name",length = 55, unique = true)
+    @Column(name = "user_name", length = 55, unique = true)
     private String userName;
 
     @Column(name = "password")
@@ -29,8 +32,12 @@ public class UserEntity {
     @Column(name = "role")
     private UserRole role;
 
+    @OneToMany(mappedBy = "user")
+    @JoinColumn(name = "topics")
+    private List<TopicEntity> topicEntities;
 
-    public UserEntity() {}
+    public UserEntity() {
+    }
 
     public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
         //TODO: MAKE PEPPER A ENV VARIABLE
@@ -39,6 +46,7 @@ public class UserEntity {
         this.email = email;
         this.phone = phone;
         this.role = role;
+        this.topicEntities = new ArrayList<>();
     }
 
     public UserEntity(UserCredentials credentials) {
@@ -47,9 +55,8 @@ public class UserEntity {
         this.email = credentials.getEmail();
         this.phone = credentials.getPhone();
         this.role = UserRole.USER;
+        this.topicEntities = new ArrayList<>();
     }
-
-
 
     public boolean verifyPassword(String pw){
         return BCrypt.checkpw(pw, password);
@@ -63,12 +70,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
     }
 
     public String getUserName() {
@@ -101,5 +108,13 @@ public class UserEntity {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<TopicEntity> getTopicEntities() {
+        return topicEntities;
+    }
+
+    public void setTopicEntities(List<TopicEntity> topicEntities) {
+        this.topicEntities = topicEntities;
     }
 }

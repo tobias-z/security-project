@@ -1,1 +1,9 @@
 2021-11-10 10:04:21 WARN  Log:19 - What's down
+2021-11-16 22:22:58 WARN  TopicRepository:47 - No topics where found. Did someone remove them?
+2021-11-20 19:44:38 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-20 19:44:38 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:40:31 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:40:31 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-21 13:59:45 WARN  BaseRepository:20 - User: admin was requested. But none existent
