@@ -94,13 +94,33 @@ public class UserRepository implements IUserRepository {
     @Override
     public void deleteUserByUserName(String username) throws UserNotFoundException {
         EntityManager em = emf.createEntityManager();
-        System.out.println("deletetttttt"+username);
         try {
             UserEntity userEntity=em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
                     .setParameter("username", username)
                     .getSingleResult();
             em.getTransaction().begin();
             em.remove(userEntity);
+            em.getTransaction().commit();
+            return;
+        } catch (Exception e) {
+            System.out.println("catch");
+            return ;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void editUser(User user) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            UserEntity userEntity=em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+                    .setParameter("username", user.getUsername())
+                    .getSingleResult();
+            em.getTransaction().begin();
+                 userEntity.setEmail(user.getUserEmail());
+                 userEntity.setPhone(user.getPhone());
+                 userEntity.setRole(user.getUserRole());
             em.getTransaction().commit();
             return;
         } catch (Exception e) {

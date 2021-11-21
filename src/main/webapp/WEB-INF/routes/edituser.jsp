@@ -6,12 +6,12 @@
     <h1>Edit user</h1>
 
     <form class="row mt-3" method="post" style="width: 500px">
-        <c:if test="${sessionScope.signupError != null}" var="error">
-            <div class="col-12 alert alert-danger" role="alert">${sessionScope.signupError}</div>
+        <c:if test="${sessionScope.EditUserError != null}" var="error">
+            <div class="col-12 alert alert-danger" role="alert">${sessionScope.EditUserError}</div>
         </c:if>
         <div class="col-12">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control form-control-lg" id="username" name="username" value=${requestScope.usertoedit.username} >
+            <input type="text" class="form-control form-control-lg" id="username" name="username" value=${requestScope.usertoedit.username} disabled>
         </div>
         <div class="col-12 mt-3">
             <label for="email" class="form-label">Email</label>

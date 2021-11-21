@@ -176,4 +176,9 @@ public class UserService implements IUserService {
     public User getUserByUserName(String username) throws UserNotFoundException {
         return new User(repository.getUserByUserName(username));
     }
+
+    @Override
+    public void edit(User user) {
+        repository.editUser(user);
+    }
 }

@@ -28,4 +28,5 @@ public interface IUserService {
 
     User getUserByUserName(String username) throws UserNotFoundException;
 
+    void edit(User user);
 }

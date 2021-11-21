@@ -39,4 +39,9 @@ public class MockUserRepository implements IUserRepository {
     public void deleteUserByUserName(String username) throws UserNotFoundException {
 
     }
+
+    @Override
+    public void editUser(User user) {
+
+    }
 }

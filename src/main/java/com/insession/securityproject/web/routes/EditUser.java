@@ -36,12 +36,14 @@ public class EditUser extends RootServlet {
     @Override
     public String loader(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username= (String) request.getSession(true).getAttribute("usertoedit");
+
         try {
-            System.out.println(username);
-            request.setAttribute("usertoedit", userService.getUserByUserName(username));
+            User user=userService.getUserByUserName(username);
+            request.setAttribute("usertoedit", user);
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            return "/users";
         }
+
         return "/edituser";
     }
 
@@ -49,23 +51,32 @@ public class EditUser extends RootServlet {
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(true);
         try {
-            String username = req.getParameter("username");
+            String userToEdit= (String) req.getSession(true).getAttribute("usertoedit");
+            User originalUser=userService.getUserByUserName(userToEdit);
+            System.out.println(originalUser.getUsername());
             String email = req.getParameter("email");
             int phone = getPhone(req);
-            String password = req.getParameter("password");
-            String repeatedPassword = req.getParameter("repeatPassword");
-            validate(username, email, phone, password, repeatedPassword);
-            if (userService.userExists(username, email)) {
-                throw new UserExistsException("A user with that username or email already exists");
-            }
-            UserRole role=UserRole.USER;
-            if (req.getParameter("role")=="ADMIN") role= UserRole.ADMIN;
-            User user = new User(username, role, email, phone);
-            userService.create(user, password);
+            String roleString=req.getParameter("role");
+            UserRole role=((roleString.equals("ADMIN")) ? UserRole.ADMIN : UserRole.USER);
+            User editedUser=new User(userToEdit,role,email,phone);
+            validate( email, phone);
 
-            return "/";
-        } catch (InvalidKeysException | UserExistsException | UserCreationException e) {
-            session.setAttribute("signupError", e.getMessage());
+
+            if(!originalUser.getUserEmail().equals( editedUser.getUserEmail())){
+                if (userService.userExists("none",editedUser.getUserEmail())){
+                    throw new UserExistsException("A user with this email already exists "+editedUser.getUserEmail());
+                }
+            }
+
+            if ((originalUser.getUserRole()==UserRole.ADMIN)&&(editedUser.getUserRole()==UserRole.USER)){
+                throw new InvalidKeysException("You are not allowed to change user status to USER");
+            }
+
+            userService.edit(editedUser);
+
+            return "/users";
+        } catch (InvalidKeysException | UserExistsException  | UserNotFoundException e) {
+            session.setAttribute("EditUserError", e.getMessage());
             return "/edituser";
         }
     }
@@ -91,19 +102,13 @@ public class EditUser extends RootServlet {
         return count;
     }
 
-    private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {
+    private void validate( String email, Integer phone) throws InvalidKeysException {
         String message = "Invalid input provided in field: ";
-        if (!validateInput(username))
-            throw new InvalidKeysException(message + "Username");
+
         if (!validateEmail(email))
             throw new InvalidKeysException(message + "Email");
         if (!validateInput(String.valueOf(phone)))
             throw new InvalidKeysException(message + "Phone Number");
-        if (!validateInput(password))
-            throw new InvalidKeysException(message + "Password");
-        if (password.length() < 16)
-            throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
-        if (!password.equals(repeatedPassword))
-            throw new InvalidKeysException("The two passwords did not match");
+
     }
 }
