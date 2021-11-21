@@ -15,4 +15,8 @@ public interface IUserRepository {
     void create(User user,String password)throws UserCreationException;
 
     List<UserEntity> getAllUsers() throws UserNotFoundException;
+
+    void deleteUserByUserName(String username) throws UserNotFoundException;
+
+    void editUser(User user);
 }

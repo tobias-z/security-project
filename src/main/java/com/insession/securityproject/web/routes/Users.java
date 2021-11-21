@@ -66,6 +66,14 @@ public class Users extends RootServlet {
             System.out.println("Delete:"+usertodelete);
             String usertoedit = req.getParameter("usertoedit");
             System.out.println("Edit:"+usertoedit);
+            if (usertodelete!=null){
+                userService.deleteUserByUserName(usertodelete);
+            }
+            if (usertoedit!=null){
+                //userService.editUserName(usertoedit);
+                session.setAttribute("usertoedit", usertoedit);
+                return "/edituser";
+            }
             return "/users";
         } catch (Exception e) {
             session.setAttribute("signupError", e.getMessage());

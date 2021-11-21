@@ -3,8 +3,8 @@
 
 <section class="container d-flex justify-content-center align-items-center"
          style="min-height: 90vh; flex-direction: column">
-    <h1>Users</h1>
-    <h1 class="text-center">AllUsers</h1>
+
+    <h1 class="text-center">Users</h1>
 
     <table class="table">
     <thead>
