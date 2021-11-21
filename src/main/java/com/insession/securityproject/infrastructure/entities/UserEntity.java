@@ -1,5 +1,6 @@
 package com.insession.securityproject.infrastructure.entities;
 
+import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
@@ -57,7 +58,7 @@ public class UserEntity {
         this.topicEntities = new ArrayList<>();
     }
 
-    public boolean verifyPassword(String pw) {
+    public boolean verifyPassword(String pw){
         return BCrypt.checkpw(pw, password);
     }
 

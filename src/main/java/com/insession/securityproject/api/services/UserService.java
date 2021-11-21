@@ -17,6 +17,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class UserService implements IUserService {
@@ -33,7 +35,7 @@ public class UserService implements IUserService {
     @Override
     public void sendPinMail(User user) {
         // generates One time pin cocde and sends i to users email.
-        AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService authPinCodeService = new AuthPinCodeService();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.EMAIL);
 
         // Recipient's email ID needs to be mentioned.
@@ -91,6 +93,10 @@ public class UserService implements IUserService {
             System.out.println("sending...");
             // Send message
             Transport.send(message);
+
+            //log
+            // logger.info("Mail pincode send: " + user.getUserName());
+
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
@@ -102,7 +108,7 @@ public class UserService implements IUserService {
         String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
         String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
 
-        AuthPinCodeService authPinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService authPinCodeService = new AuthPinCodeService();
         int pinCode = authPinCodeService.getNewPinCode(user.getUsername(), PinCodeChannel.SMS);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
@@ -116,8 +122,11 @@ public class UserService implements IUserService {
     public User login(String username, String password) throws Exception {
         UserEntity user = repository.getUserByUserName(username);
         if (!user.verifyPassword(password)) {
+            //log
+            logger.warn("Wrong password: " + user.getUserName());
             throw new Exception("Not valid login");
         }
+        //log
         logger.info("Login: " + user.getUserName());
         return new User(user);
     }
@@ -130,7 +139,7 @@ public class UserService implements IUserService {
 
     @Override
     public void signup(UserCredentials credentials, int emailPin, int smsPin) throws UserCreationException {
-        AuthPinCodeService pinCodeService = AuthPinCodeService.getInstance();
+        AuthPinCodeService pinCodeService = new AuthPinCodeService();
         boolean isValidEmail = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.EMAIL, emailPin);
         boolean isValidSMS = pinCodeService.isValidPinCode(credentials.getUsername(), PinCodeChannel.SMS, smsPin);
         if (!isValidEmail || !isValidSMS) {
@@ -138,6 +147,22 @@ public class UserService implements IUserService {
         }
         repository.createUser(credentials);
     }
+
+    @Override
+    public void create(User user, String password) throws UserCreationException {
+        repository.create(user,password);
+    }
+
+    @Override
+    public List<User> getAll() throws UserNotFoundException {
+        List<UserEntity> entityList=repository.getAllUsers();
+        List<User> returnList=new ArrayList<>();
+        for (UserEntity user:entityList) {
+            returnList.add(new User(user));
+        }
+        return returnList;
+    }
+
 
     @Override
     public boolean userExists(String username, String email) {
