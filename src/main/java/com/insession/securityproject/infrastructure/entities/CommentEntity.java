@@ -7,8 +7,8 @@ import java.util.Date;
 @Entity
 @Table(name = "comment")
 @NamedQueries({
-        @NamedQuery(name = "Comment.deleteAllRows", query = "DELETE from CommentEntity u"),
-        @NamedQuery(name = "Comment.getAll", query = "Select u from CommentEntity u")
+        @NamedQuery(name = "CommentEntity.deleteAllRows", query = "DELETE from CommentEntity u"),
+        @NamedQuery(name = "CommentEntity.getAll", query = "Select u from CommentEntity u")
 })
 public class CommentEntity implements Serializable {
 

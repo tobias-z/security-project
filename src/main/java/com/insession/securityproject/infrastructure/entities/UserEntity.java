@@ -5,6 +5,8 @@ import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -29,6 +31,9 @@ public class UserEntity {
     @Column(name = "role")
     private UserRole role;
 
+    @OneToMany(mappedBy = "user")
+    @JoinColumn(name = "topics")
+    private List<TopicEntity> topicEntities;
 
     public UserEntity() {
     }
@@ -40,6 +45,7 @@ public class UserEntity {
         this.email = email;
         this.phone = phone;
         this.role = role;
+        this.topicEntities = new ArrayList<>();
     }
 
     public UserEntity(UserCredentials credentials) {
@@ -48,6 +54,7 @@ public class UserEntity {
         this.email = credentials.getEmail();
         this.phone = credentials.getPhone();
         this.role = UserRole.USER;
+        this.topicEntities = new ArrayList<>();
     }
 
     public boolean verifyPassword(String pw) {
@@ -100,5 +107,13 @@ public class UserEntity {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<TopicEntity> getTopicEntities() {
+        return topicEntities;
+    }
+
+    public void setTopicEntities(List<TopicEntity> topicEntities) {
+        this.topicEntities = topicEntities;
     }
 }

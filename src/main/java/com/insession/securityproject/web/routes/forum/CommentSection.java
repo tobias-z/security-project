@@ -3,6 +3,7 @@ package com.insession.securityproject.web.routes.forum;
 import com.insession.securityproject.api.services.TopicService;
 import com.insession.securityproject.domain.comment.InvalidCommentException;
 import com.insession.securityproject.domain.topic.ITopicService;
+import com.insession.securityproject.domain.topic.InvalidTopicException;
 import com.insession.securityproject.domain.topic.NoTopicsFoundException;
 import com.insession.securityproject.domain.topic.Topic;
 import com.insession.securityproject.domain.user.UserNotFoundException;
@@ -28,7 +29,7 @@ public class CommentSection extends RootServlet {
     public void init() throws ServletException {
         this.title = "Comment section";
         this.description = "The comment section of a topic";
-        this.setRolesAllowed(UserRole.USER);
+        this.setRolesAllowed(UserRole.USER, UserRole.ADMIN);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class CommentSection extends RootServlet {
             Topic topic = topicService.getTopic(id);
             req.setAttribute("topic", topic);
             return "/forum/comment-section";
-        } catch (NoTopicsFoundException e) {
+        } catch (NoTopicsFoundException | InvalidTopicException e) {
             return super.sendError(req, resp, e.getMessage());
         }
     }
@@ -58,20 +59,7 @@ public class CommentSection extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = getId(req);
-        if (id == -1) return "/forum";
-
-        HttpSession session = req.getSession();
-        try {
-            String username = getUserName(session);
-            String comment = req.getParameter("comment");
-            topicService.addCommentToTopic(comment, username, id);
-            session.removeAttribute("commentError");
-        } catch (UserNotFoundException | InvalidCommentException | NoTopicsFoundException e) {
-            session.setAttribute("commentError", e.getMessage());
-        }
-
-        return "/forum/" + id;
+        return "/forum/";
     }
 
 }

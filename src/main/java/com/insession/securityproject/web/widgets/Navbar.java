@@ -22,7 +22,7 @@ public class Navbar {
         items.add(new Item("Admin", "/admin", UserRole.ADMIN));
         items.add(new Item("Profile", "/profile", UserRole.USER));
         items.add(new Item("Products", "/products", UserRole.USER, UserRole.NO_USER));
-        items.add(new Item("Forum", "/forum", UserRole.USER));
+        items.add(new Item("Forum", "/forum", UserRole.USER, UserRole.ADMIN));
         items.add(new Item("Login", "/login", UserRole.NO_USER));
         items.add(new Item("Sign up", "/signup", UserRole.NO_USER));
         return items;

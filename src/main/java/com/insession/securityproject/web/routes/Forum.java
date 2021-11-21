@@ -14,7 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/forum")
@@ -27,7 +26,7 @@ public class Forum extends RootServlet {
     public void init() throws ServletException {
         this.title = "The Forum";
         this.description = "Forum of this website. Relevant topics will be discussed";
-        this.setRolesAllowed(UserRole.USER);
+        this.setRolesAllowed(UserRole.USER, UserRole.ADMIN);
     }
 
     @Override
@@ -42,17 +41,6 @@ public class Forum extends RootServlet {
 
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            String topic = req.getParameter("topic");
-            String username = getUserName(req.getSession());
-            topicService.createTopic(topic, username);
-            req.setAttribute("createdTopic", "Topic was successfully created");
-
-            // TODO: Send to created forum
-            return "/forum";
-        } catch (InvalidTopicException | UserNotFoundException e) {
-            req.setAttribute("topicError", e.getMessage());
-            return "/forum";
-        }
+        return "/forum";
     }
 }

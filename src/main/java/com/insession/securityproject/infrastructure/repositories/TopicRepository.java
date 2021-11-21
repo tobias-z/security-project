@@ -1,11 +1,14 @@
 package com.insession.securityproject.infrastructure.repositories;
 
 import com.insession.securityproject.domain.comment.InvalidCommentException;
+import com.insession.securityproject.domain.comment.CommentNotFoundException;
 import com.insession.securityproject.domain.topic.ITopicRepository;
 import com.insession.securityproject.domain.topic.InvalidTopicException;
 import com.insession.securityproject.domain.topic.NoTopicsFoundException;
 import com.insession.securityproject.domain.topic.Topic;
+import com.insession.securityproject.domain.user.InvalidUserException;
 import com.insession.securityproject.domain.user.UserNotFoundException;
+import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.entities.CommentEntity;
 import com.insession.securityproject.infrastructure.entities.TopicEntity;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
@@ -28,7 +31,7 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
     }
 
     @Override
-    public void createTopic(String message, String username) throws InvalidTopicException, UserNotFoundException {
+    public int createTopic(String message, String username) throws InvalidTopicException, UserNotFoundException {
         EntityManager em = emf.createEntityManager();
         try {
             UserEntity user = super.getUserEntity(username, em);
@@ -37,6 +40,7 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
             em.persist(topic);
             em.getTransaction().commit();
             logger.info("Created new topic by: " + username);
+            return topic.getId();
         } catch (EntityExistsException e) {
             logger.error("Invalid topic provided by " + username + ": " + message);
             throw new InvalidTopicException("Invalid topic. Please provide a valid one");
@@ -50,7 +54,7 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
         EntityManager em = emf.createEntityManager();
         try {
             List<TopicEntity> topicEntities = em.createNativeQuery(
-                            "SELECT * FROM topic ORDER BY created_at ASC LIMIT ?", TopicEntity.class
+                            "SELECT * FROM topic ORDER BY created_at DESC LIMIT ?", TopicEntity.class
                     ).setParameter(1, limit)
                     .getResultList();
             return Topic.getTopics(topicEntities);
@@ -97,5 +101,65 @@ public class TopicRepository extends BaseRepository implements ITopicRepository 
         } finally {
             em.close();
         }
+    }
+
+    @Override
+    public void deleteTopic(Integer topicId, String username) throws NoTopicsFoundException, InvalidUserException, UserNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TopicEntity topicEntity = getTopicEntity(topicId, em);
+            if (!isCorrectTopicUser(username, em, topicEntity)) {
+                logger.error("User: " + username + " tried to remove topic with id: " + topicId + " but was not allowed");
+                throw new InvalidUserException("This user cannot remove topic with id: " + topicId);
+            }
+
+            em.getTransaction().begin();
+            topicEntity.getUser().getTopicEntities().remove(topicEntity);
+            em.remove(topicEntity);
+            em.getTransaction().commit();
+        } catch (IllegalArgumentException e) {
+            logger.info("Was unable to delete topic with id: " + topicId + " by user: " + username);
+            throw new NoTopicsFoundException("Was unable to delete topic with id: " + topicId);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void deleteComment(int commentId, String username) throws UserNotFoundException, InvalidUserException, CommentNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            CommentEntity commentEntity = em.find(CommentEntity.class, commentId);
+            if (!isCorrectCommentUser(username, em, commentEntity)) {
+                logger.error("User: " + username + " tried to remove comment with id: " + commentId + " but was not allowed");
+                throw new InvalidUserException("This user cannot remove topic with id: " + commentId);
+            }
+
+            em.getTransaction().begin();
+            commentEntity.getTopicEntity().getCommentEntities().remove(commentEntity);
+            em.remove(commentEntity);
+            em.getTransaction().commit();
+        } catch (IllegalArgumentException e) {
+            logger.info("Was unable to delete comment with id: " + commentId + " by user: " + username);
+            throw new CommentNotFoundException("Was unable to delete topic with id: " + commentId);
+        } finally {
+            em.close();
+        }
+    }
+
+    private boolean isAdmin(String username, EntityManager em) throws UserNotFoundException {
+        return super.getUserEntity(username, em).getRole().equals(UserRole.ADMIN);
+    }
+
+    private boolean isCorrectTopicUser(String username, EntityManager em, TopicEntity topicEntity) throws UserNotFoundException {
+        if (topicEntity.getUser().getUserName().equals(username))
+            return true;
+        return isAdmin(username, em);
+    }
+
+    private boolean isCorrectCommentUser(String username, EntityManager em, CommentEntity commentEntity) throws UserNotFoundException {
+        if (commentEntity.getUserEntity().getUserName().equals(username))
+            return true;
+        return isAdmin(username, em);
     }
 }

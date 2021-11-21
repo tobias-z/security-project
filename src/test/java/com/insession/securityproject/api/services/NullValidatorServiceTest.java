@@ -12,20 +12,20 @@ class NullValidatorServiceTest {
     @DisplayName("validateField should not throw when given correct values")
     void validateFieldShouldNotThrowWhenGivenCorrectValues() throws Exception {
         String message = "dsadadada";
-        assertDoesNotThrow(() -> NullValidatorService.validateField(message, "message", Exception.class));
+        assertDoesNotThrow(() -> NullValidatorService.nullOrEmpty(message, "message", Exception.class));
     }
 
     @Test
     @DisplayName("validateField should throw when given empty string")
     void validateFieldShouldThrowWhenGivenIncorrectValues() throws Exception {
         String message = "";
-        assertThrows(Exception.class, () -> NullValidatorService.validateField(message, "message", Exception.class));
+        assertThrows(Exception.class, () -> NullValidatorService.nullOrEmpty(message, "message", Exception.class));
     }
 
     @Test
     @DisplayName("validateField should throw when given null")
     void validateFieldShouldThrowWhenGivenNull() throws Exception {
         String message = null;
-        assertThrows(Exception.class, () -> NullValidatorService.validateField(message, "message", Exception.class));
+        assertThrows(Exception.class, () -> NullValidatorService.nullOrEmpty(message, "message", Exception.class));
     }
 }

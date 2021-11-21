@@ -30,7 +30,7 @@ public class TopicEntity implements Serializable {
     @Column(name = "created_at")
     private Date createdAt;
 
-    @OneToMany(mappedBy = "topicEntity", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "topicEntity", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "comments")
     private List<CommentEntity> commentEntities;
 
