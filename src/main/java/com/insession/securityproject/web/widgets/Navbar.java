@@ -26,6 +26,7 @@ public class Navbar {
         items.add(new Item("Forum", "/forum", UserRole.USER, UserRole.ADMIN));
         items.add(new Item("Login", "/login", UserRole.NO_USER));
         items.add(new Item("Sign up", "/signup", UserRole.NO_USER));
+        items.add(new Item("Logout","/logout",UserRole.USER,UserRole.ADMIN));
         return items;
     }
 
