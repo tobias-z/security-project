@@ -32,7 +32,7 @@ public abstract class ForumAction extends RootServlet {
     protected String createMutation(HttpServletRequest req, HttpServletResponse resp, String[] requestParams, Mutation action) throws ServletException, IOException {
         Integer[] numbers = getRequestNumbers(req, requestParams);
         if (numbers.length == 0)
-            return sendError(req, resp, "Invalid arguments were provided");
+            return super.sendError(req, "Invalid arguments were provided");
         HttpSession session = req.getSession();
         String username = getUserName(session);
 
@@ -41,7 +41,7 @@ public abstract class ForumAction extends RootServlet {
 
     @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        return super.sendError(req, resp, "This is not a route to be used as a page");
+        return super.sendError(req, "This is not a route to be used as a page");
     }
 }
 
