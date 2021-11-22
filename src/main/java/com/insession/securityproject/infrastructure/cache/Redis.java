@@ -5,9 +5,14 @@ import redis.clients.jedis.Jedis;
 public class Redis {
     private static Jedis getJedis() {
         String host = "localhost";
-        if (System.getenv("DEPLOYED") != null)
+        boolean isDeployed = System.getenv("DEPLOYED") != null;
+        if (isDeployed)
             host = System.getenv("REDIS_URL");
-        return new Jedis(host, 6379);
+
+        Jedis jedis = new Jedis(host, 6379);
+        if (isDeployed)
+            jedis.auth(System.getenv("REDIS_PASSWORD"));
+        return jedis;
     }
 
     public static RedisConnection getConnection() {
