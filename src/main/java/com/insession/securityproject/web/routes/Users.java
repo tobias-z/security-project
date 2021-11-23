@@ -65,14 +65,23 @@ public class Users extends RootServlet {
         try {
             String usertodelete = req.getParameter("usertodelete");
             String usertoedit = req.getParameter("usertoedit");
+
             if (usertodelete!=null){
                 // if illegal characters or user not existing, post not from webside, terminate session and return to frontpage
                 if (!validateInput(usertodelete)||(!userService.userExists(usertodelete,"n/a"))){
                     session.invalidate();
                     return "/";
                 }
+                session.setAttribute("usertodelete", usertodelete);
 
-                userService.deleteUserByUserName(usertodelete);
+                String loggedInUser= (String) session.getAttribute("userName");
+                session.setAttribute("pinCodeUsername", loggedInUser);
+
+                User user=userService.getUserByUserName(loggedInUser);
+                userService.sendPinMail(user);
+
+                return "/pin/deleteuser";
+                //userService.deleteUserByUserName(usertodelete);
             }
             if (usertoedit!=null){
                 // if illegal characters or user not existing, post not from webside, terminate session and return to frontpage
