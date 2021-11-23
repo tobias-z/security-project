@@ -41,7 +41,7 @@ public class CommentSection extends RootServlet {
             req.setAttribute("topic", topic);
             return "/forum/comment-section";
         } catch (NoTopicsFoundException | InvalidTopicException e) {
-            return super.sendError(req, resp, e.getMessage());
+            return super.sendError(req, e.getMessage());
         }
     }
 

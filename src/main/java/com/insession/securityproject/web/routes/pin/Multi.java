@@ -32,7 +32,7 @@ public class Multi extends RootServlet {
     @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getSession(true).getAttribute("signupUsername") == null) {
-            super.sendError(req, resp, "You do not currently have a pin code that needs validating");
+            super.sendError(req, "You do not currently have a pin code that needs validating");
         }
         return "/pin/multi";
     }
@@ -59,7 +59,7 @@ public class Multi extends RootServlet {
     private UserCredentials getUserCredentials(String username, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         UserCredentials credentials = Redis.getConnection().get(username, UserCredentials.class);
         if (credentials == null)
-            sendError(req, res, "You dont have any user to login to");
+            sendError(req, "You dont have any user to login to");
         return credentials;
     }
 }

@@ -29,7 +29,7 @@ public class DeleteTopicAction extends ForumAction {
                 req.setAttribute("topicRemoved", "Successfully deleted topic");
                 return "/forum";
             } catch (InvalidKeysException | UserNotFoundException | NoTopicsFoundException | InvalidUserException e) {
-                return sendError(req, resp, e.getMessage());
+                return sendError(req, e.getMessage());
             }
         });
     }
