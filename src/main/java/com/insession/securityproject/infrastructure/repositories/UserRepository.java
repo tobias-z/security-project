@@ -25,7 +25,7 @@ public class UserRepository implements IUserRepository {
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (Exception e) {
-            throw new UserNotFoundException("Not valid login");
+            throw new UserNotFoundException(username +" not found");
         } finally {
             em.close();
         }
