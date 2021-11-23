@@ -4,14 +4,17 @@ import com.insession.securityproject.domain.user.BruteForceException;
 import com.insession.securityproject.infrastructure.cache.Redis;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BruteForceServiceTest {
     private BruteForceService bruteForceService;
 
-    private final String ip = "127.0.0.111";
+    private final String ip = "127.0.0.1";
     private final String u1 = "user1";
     private final String u2 = "user2";
     private final String u3 = "user3";
@@ -23,7 +26,7 @@ class BruteForceServiceTest {
         Redis.getConnection()
                 .removeAll()
                 .close();
-        bruteForceService = new BruteForceService(10, 3);
+        bruteForceService = new BruteForceService(10, 3, 1);
     }
 
     @Test
@@ -73,25 +76,67 @@ class BruteForceServiceTest {
         assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u4));
     }
 
-    @Test
-    @DisplayName("handleBruteForce will keep throwing when maxAttempts has been exceeded")
-    void handleBruteForceWillKeepThrowingWhenMaxAttemptsHasBeenExceeded() throws Exception {
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
+    @Nested
+    @DisplayName("max attempts")
+    class MaxAttempts {
+        @BeforeEach
+        void setUp() throws Exception {
+            bruteForceService.handleBruteForce(ip, u1);
+            bruteForceService.handleBruteForce(ip, u1);
+            bruteForceService.handleBruteForce(ip, u1);
+            bruteForceService.handleBruteForce(ip, u2);
+            bruteForceService.handleBruteForce(ip, u2);
+            bruteForceService.handleBruteForce(ip, u2);
+            bruteForceService.handleBruteForce(ip, u3);
+            bruteForceService.handleBruteForce(ip, u3);
+            bruteForceService.handleBruteForce(ip, u4);
+            bruteForceService.handleBruteForce(ip, u4);
+        }
 
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u2));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u2));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u2));
+        @Test
+        @DisplayName("handleBruteForce will keep throwing when maxAttempts has been exceeded")
+        void handleBruteForceWillKeepThrowingWhenMaxAttemptsHasBeenExceeded() throws Exception {
+            assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u5));
+            assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u5));
+        }
 
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u3));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u3));
-
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u4));
-        assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u4));
-
-        assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u5));
-        assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u5));
+        @Test
+        @DisplayName("handleBruteForce will not throw after the time has passed")
+        void handleBruteForceWillNotThrowAfterTheTimeHasPassed() throws Exception {
+            TimeUnit.SECONDS.sleep(2);
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u5));
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u5));
+        }
     }
+
+    @Nested
+    @DisplayName("max attempts user")
+    class MaxAttemptsUser {
+        @BeforeEach
+        void setUp() throws Exception {
+            bruteForceService.handleBruteForce(ip, u1);
+            bruteForceService.handleBruteForce(ip, u1);
+            bruteForceService.handleBruteForce(ip, u1);
+            TimeUnit.SECONDS.sleep(2);
+        }
+
+        @Test
+        @DisplayName("handleBruteForce will not throw after time has run out")
+        void handleBruteForceWillNotThrowAfterTimeHasRunOut() throws Exception {
+            // Count has been reset so it will not throw
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
+        }
+
+        @Test
+        @DisplayName("handleBruteForce will throw when count is too big again")
+        void handleBruteForceWillThrowWhenCountIsTooBigAgain() throws Exception {
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
+            assertDoesNotThrow(() -> bruteForceService.handleBruteForce(ip, u1));
+
+            assertThrows(BruteForceException.class, () -> bruteForceService.handleBruteForce(ip, u1));
+        }
+    }
+
 
 }

@@ -25,11 +25,15 @@ public class BruteForceCount {
         this.count++;
     }
 
+    public void resetCount() {
+        this.count = 1;
+    }
+
     public LocalDateTime getLastDate() {
         return lastDate;
     }
 
-    public void setLastDate(LocalDateTime lastDate) {
-        this.lastDate = lastDate;
+    public void updateLastDate(int banTimeSeconds) {
+        this.lastDate = LocalDateTime.now().plusSeconds(banTimeSeconds);
     }
 }

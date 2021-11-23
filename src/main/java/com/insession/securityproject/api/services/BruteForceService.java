@@ -12,10 +12,12 @@ import java.util.Map;
 public class BruteForceService {
     private final Integer maxTries;
     private final Integer userTries;
+    private final Integer banTimeSeconds;
 
-    public BruteForceService(Integer maxTries, Integer userTries) {
+    public BruteForceService(Integer maxTries, Integer userTries, Integer banTimeSeconds) {
         this.maxTries = maxTries;
         this.userTries = userTries;
+        this.banTimeSeconds = banTimeSeconds;
     }
 
     public void handleBruteForce(String ip, String username) throws BruteForceException {
@@ -24,24 +26,46 @@ public class BruteForceService {
         bruteForceCount.incrementCount();
         bruteForceIP.incrementCount();
 
+        boolean isBanned = isBanned(bruteForceIP, bruteForceCount);
+        bruteForceCount.updateLastDate(banTimeSeconds);
+        bruteForceIP.updateLastDate(banTimeSeconds);
         Redis.getConnection().put(getKey(ip), bruteForceIP).close();
 
-        if (isBanned(bruteForceIP, bruteForceCount))
+        if (isBanned)
             throw new BruteForceException();
     }
 
     private boolean isBanned(BruteForceIP bruteForceIP, BruteForceCount bruteForceCount) {
-        if (bruteForceCount.getCount() > userTries)
+        if (isBannedOfUser(bruteForceCount))
             return true;
-        if (bruteForceIP.getFullCount() > maxTries)
+
+        if (isIPBanned(bruteForceIP))
             return true;
 
         int count = 0;
         for (Map.Entry<String, BruteForceCount> entry : bruteForceIP.getBruteForceCount().entrySet()) {
-            if (entry.getValue().getCount() >= userTries) count++;
+            if (entry.getValue().getCount() > userTries) count++;
         }
 
         return count >= 3;
+    }
+
+    private boolean isBannedOfUser(BruteForceCount bruteForceCount) {
+        boolean timeHasRunOut = bruteForceCount.getLastDate().isBefore(LocalDateTime.now());
+        if (timeHasRunOut) {
+            bruteForceCount.resetCount();
+        }
+
+        return bruteForceCount.getCount() > userTries;
+    }
+
+    private boolean isIPBanned(BruteForceIP bruteForceIP) {
+        boolean timeHasRunOut = bruteForceIP.getLastDate().isBefore(LocalDateTime.now());
+        if (timeHasRunOut) {
+            bruteForceIP.resetCount();
+        }
+
+        return bruteForceIP.getFullCount() > maxTries;
     }
 
     private BruteForceCount getBruteForceCount(String username, BruteForceIP bruteForceIP) {
@@ -49,7 +73,7 @@ public class BruteForceService {
         if (bruteForceCount != null)
             return bruteForceCount;
 
-        bruteForceCount = new BruteForceCount(username, 0, LocalDateTime.now());
+        bruteForceCount = new BruteForceCount(username, 0, LocalDateTime.now().plusSeconds(banTimeSeconds));
         bruteForceIP.getBruteForceCount().put(username, bruteForceCount);
         return bruteForceCount;
     }
@@ -57,7 +81,7 @@ public class BruteForceService {
     private BruteForceIP getBruteForceIP(String ip) {
         BruteForceIP bruteForceIP = Redis.getConnection().get(getKey(ip), BruteForceIP.class);
         if (bruteForceIP == null)
-            bruteForceIP = new BruteForceIP(0, new HashMap<>());
+            bruteForceIP = new BruteForceIP(0, new HashMap<>(), LocalDateTime.now().plusSeconds(banTimeSeconds));
         return bruteForceIP;
     }
 
