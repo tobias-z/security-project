@@ -71,10 +71,15 @@ public class EditUser extends RootServlet {
             if ((originalUser.getUserRole()==UserRole.ADMIN)&&(editedUser.getUserRole()==UserRole.USER)){
                 throw new InvalidKeysException("You are not allowed to change user status to USER");
             }
+            session.setAttribute("editedUser",editedUser);
+            String loggedInUser= (String) session.getAttribute("userName");
+            session.setAttribute("pinCodeUsername", loggedInUser);
 
-            userService.edit(editedUser);
+            User user=userService.getUserByUserName(loggedInUser);
+            userService.sendPinMail(user);
+            //userService.edit(editedUser);
 
-            return "/users";
+            return "/pin/edit";
         } catch (InvalidKeysException | UserExistsException  | UserNotFoundException e) {
             session.setAttribute("EditUserError", e.getMessage());
             return "/edituser";
