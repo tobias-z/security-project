@@ -36,7 +36,7 @@ public class Edit extends RootServlet {
     @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getSession().getAttribute("pinCodeUsername") == null) {
-            super.sendError(req, resp, "You do not currently have a pin code that needs validating");
+            super.sendError(req, "You do not currently have a pin code that needs validating");
         }
         return "/pin/edit";
     }
@@ -55,7 +55,7 @@ public class Edit extends RootServlet {
             userService.edit(editedUser);
             return "/users";
         } catch (Exception e) {
-            return super.sendError(req, resp, "Please try to edit again. An error happened when trying to find your user");
+            return super.sendError(req, "Please try to edit again. An error happened when trying to find your user");
         }
     }
 
