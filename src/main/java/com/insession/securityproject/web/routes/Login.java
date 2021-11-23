@@ -1,9 +1,9 @@
 package com.insession.securityproject.web.routes;
 
+import com.insession.securityproject.api.services.BruteForceService;
+import com.insession.securityproject.api.services.NullValidatorService;
 import com.insession.securityproject.api.services.UserService;
-import com.insession.securityproject.domain.user.IUserService;
-import com.insession.securityproject.domain.user.User;
-import com.insession.securityproject.domain.user.UserRole;
+import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.UserRepository;
 import com.insession.securityproject.web.RootServlet;
@@ -21,6 +21,7 @@ public class Login extends RootServlet {
     private final IUserService userService = new UserService(
             new UserRepository(DBConnection.getEmf())
     );
+    private final BruteForceService bruteForceService = new BruteForceService(10, 3, 3600);
 
     public void init() {
         this.title = "Login";
@@ -39,10 +40,16 @@ public class Login extends RootServlet {
         String password = req.getParameter("password");
         HttpSession session = req.getSession();
         try {
+            NullValidatorService.nullOrEmpty(userName, "userName", InvalidKeysException.class);
+            NullValidatorService.nullOrEmpty(password, "password", InvalidKeysException.class);
+            String ip = req.getRemoteAddr();
+            bruteForceService.handleBruteForce(ip, userName);
             User user = userService.login(userName, password);
             userService.sendPinMail(user);
             session.setAttribute("pinCodeUsername", user.getUsername());
             session.removeAttribute("loginError");
+
+            bruteForceService.resetUser(ip);
             return "/pin/email";
         } catch (Exception e) {
             System.out.println(e.getMessage());

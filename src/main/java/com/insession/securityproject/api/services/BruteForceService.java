@@ -20,6 +20,11 @@ public class BruteForceService {
         this.banTimeSeconds = banTimeSeconds;
     }
 
+    public void resetUser(String ip) {
+        Redis.getConnection()
+                .put(getKey(ip), getNewBruteForceIP());
+    }
+
     public void handleBruteForce(String ip, String username) throws BruteForceException {
         BruteForceIP bruteForceIP = getBruteForceIP(ip);
         BruteForceCount bruteForceCount = getBruteForceCount(username, bruteForceIP);
@@ -32,7 +37,7 @@ public class BruteForceService {
         Redis.getConnection().put(getKey(ip), bruteForceIP).close();
 
         if (isBanned)
-            throw new BruteForceException();
+            throw new BruteForceException("Not allowed");
     }
 
     private boolean isBanned(BruteForceIP bruteForceIP, BruteForceCount bruteForceCount) {
@@ -81,11 +86,15 @@ public class BruteForceService {
     private BruteForceIP getBruteForceIP(String ip) {
         BruteForceIP bruteForceIP = Redis.getConnection().get(getKey(ip), BruteForceIP.class);
         if (bruteForceIP == null)
-            bruteForceIP = new BruteForceIP(0, new HashMap<>(), LocalDateTime.now().plusSeconds(banTimeSeconds));
+            bruteForceIP = getNewBruteForceIP();
         return bruteForceIP;
     }
 
     private String getKey(String ip) {
         return "#bruteforce" + ip;
+    }
+
+    private BruteForceIP getNewBruteForceIP() {
+        return new BruteForceIP(0, new HashMap<>(), LocalDateTime.now().plusSeconds(banTimeSeconds));
     }
 }

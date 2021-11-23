@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class RedisConnection {
-    private final Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
     private final Jedis jedis;
 
     public RedisConnection(Jedis jedis) {
