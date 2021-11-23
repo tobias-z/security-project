@@ -11,21 +11,21 @@
         </c:if>
         <div class="col-12">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control form-control-lg" id="username" name="username" value=${requestScope.usertoedit.username} disabled>
+            <input type="text" class="form-control form-control-lg" id="username" name="username" value="${requestScope.usertoedit.username}" disabled>
         </div>
         <div class="col-12 mt-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control form-control-lg" id="email" name="email" value=${requestScope.usertoedit.userEmail}>
+            <input type="email" class="form-control form-control-lg" id="email" name="email" value="${requestScope.usertoedit.userEmail}">
         </div>
         <div class="col-12 mt-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="number" class="form-control form-control-lg" id="phone" name="phone" value=${requestScope.usertoedit.phone}>
+            <input type="number" class="form-control form-control-lg" id="phone" name="phone" value="${requestScope.usertoedit.phone}">
         </div>
         <div class="col-12 mt-3">
             <label for="role" class="form-label">Role</label>
-            <select class="form-select" aria-label="select role" name="role" id="role" value=${requestScope.usertoedit.userRole} >
+            <select class="form-select" aria-label="select role" name="role" id="role" value="${requestScope.usertoedit.userRole}" >
                 <c:if test="${requestScope.usertoedit.userRole =='USER'}">
-                     <option value="USER" >User</option>
+                     <option >User</option>
                 </c:if>
                 <option value="ADMIN">Admin</option>
             </select>
