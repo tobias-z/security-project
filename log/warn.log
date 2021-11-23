@@ -7,3 +7,7 @@
 2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
 2021-11-21 13:41:15 WARN  TopicService:21 - No message was provided. but required for this action
 2021-11-21 13:59:45 WARN  BaseRepository:20 - User: admin was requested. But none existent
+2021-11-23 22:28:52 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-23 22:28:52 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-23 22:30:03 WARN  TopicService:21 - No message was provided. but required for this action
+2021-11-23 22:30:03 WARN  TopicService:21 - No message was provided. but required for this action

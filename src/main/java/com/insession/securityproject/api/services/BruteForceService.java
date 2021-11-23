@@ -22,7 +22,8 @@ public class BruteForceService {
 
     public void resetUser(String ip) {
         Redis.getConnection()
-                .put(getKey(ip), getNewBruteForceIP());
+                .put(getKey(ip), getNewBruteForceIP())
+                .close();
     }
 
     public void handleBruteForce(String ip, String username) throws BruteForceException {
