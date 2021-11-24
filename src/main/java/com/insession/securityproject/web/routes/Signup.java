@@ -104,11 +104,6 @@ public class Signup extends RootServlet {
             logger.warn("Wrong phone input: " + phone);
             throw new InvalidKeysException(message + "Phone Number");
         }
-        if (!validateInput(password)) {
-            //log
-            logger.warn("Wrong password input: " + password);
-            throw new InvalidKeysException(message + "Password");
-        }
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
         if (!password.equals(repeatedPassword)) {
