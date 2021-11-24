@@ -4,8 +4,8 @@
 <c:set var="ADMIN" value="<%= UserRole.ADMIN %>"/>
 
 <section class="d-flex justify-content-center align-items-center" style="flex-direction: column">
-    <h1>${requestScope.topic.user.username} - ${requestScope.topic.createdAt}</h1>
-    <p>${requestScope.topic.message}</p>
+    <h1><c:out value="${requestScope.topic.user.username} - ${requestScope.topic.createdAt}" /></h1>
+    <p><c:out value="${requestScope.topic.message}" /></p>
 
     <div style="width: 700px">
         <c:if test="${sessionScope.commentError != null}" var="error">
@@ -24,7 +24,7 @@
 
         <c:forEach var="comment" items="${requestScope.topic.comments}">
             <div class="d-flex justify-content-between">
-                <p>${comment.createdAt} - ${comment.user.username}: ${comment.message}</p>
+                <p><c:out value="${comment.createdAt} - ${comment.user.username}: ${comment.message}" /></p>
                 <c:if test="${comment.user.username.equals(sessionScope.userName) || sessionScope.role.equals(ADMIN)}">
                     <form method="post"
                           action="${pageContext.request.contextPath}/actions/delete-comment">
