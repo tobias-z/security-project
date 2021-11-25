@@ -32,6 +32,10 @@ public class UserEntity {
     @Column(name = "role")
     private UserRole role;
 
+    @Column(name = "imageFile")
+    private String imageFile;
+
+
     @OneToMany(mappedBy = "user")
     @JoinColumn(name = "topics")
     private List<TopicEntity> topicEntities;
@@ -56,6 +60,14 @@ public class UserEntity {
         this.phone = credentials.getPhone();
         this.role = UserRole.USER;
         this.topicEntities = new ArrayList<>();
+    }
+
+    public String getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
     }
 
     public boolean verifyPassword(String pw){
