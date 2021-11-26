@@ -1,6 +1,5 @@
 package com.insession.securityproject.infrastructure.entities;
 
-import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import org.mindrot.jbcrypt.BCrypt;
@@ -40,8 +39,7 @@ public class UserEntity {
     }
 
     public UserEntity(String userName, String password, String email, Integer phone, UserRole role) {
-        //TODO: MAKE PEPPER A ENV VARIABLE
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + getPepper());
         this.userName = userName;
         this.email = email;
         this.phone = phone;
@@ -49,13 +47,21 @@ public class UserEntity {
         this.topicEntities = new ArrayList<>();
     }
 
+
     public UserEntity(UserCredentials credentials) {
-        this.password = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt() + "pepper");
+        this.password = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt() + getPepper());
         this.userName = credentials.getUsername();
         this.email = credentials.getEmail();
         this.phone = credentials.getPhone();
         this.role = UserRole.USER;
         this.topicEntities = new ArrayList<>();
+    }
+
+    private String getPepper() {
+        String pepper = System.getenv("PEPPER");
+        // So that you don't need to have it localy
+        pepper = pepper == null ? "pepper" : pepper;
+        return pepper;
     }
 
     public boolean verifyPassword(String pw){
@@ -75,7 +81,7 @@ public class UserEntity {
     }
 
     public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + "pepper");
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt() + getPepper());
     }
 
     public String getUserName() {
