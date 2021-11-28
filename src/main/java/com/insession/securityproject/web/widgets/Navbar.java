@@ -21,7 +21,7 @@ public class Navbar {
         items.add(new Item("Home", "/", UserRole.USER, UserRole.NO_USER, UserRole.ADMIN));
         items.add(new Item("CreateUser", "/createUser", UserRole.ADMIN));
         items.add(new Item("Users", "/users", UserRole.ADMIN));
-        items.add(new Item("Profile", "/profile", UserRole.ADMIN));
+        items.add(new Item("Profile", "/profile", UserRole.USER));
         items.add(new Item("Products", "/products", UserRole.USER, UserRole.NO_USER));
         items.add(new Item("Forum", "/forum", UserRole.USER, UserRole.ADMIN));
         items.add(new Item("Login", "/login", UserRole.NO_USER));

@@ -5,6 +5,7 @@ import com.insession.securityproject.api.services.TopicService;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.topic.ITopicService;
 import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.domain.user.Whitelist;
 import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.repositories.TopicRepository;
@@ -37,6 +38,12 @@ public class Profile extends RootServlet {
     UserRepository repo = new UserRepository(DBConnection.getEmf());
     String userImage;
 
+    @Override
+    public void init() throws ServletException {
+        this.title = "Profile";
+        this.description = "Add,or delete profile picture";
+        this.setRolesAllowed(UserRole.USER);
+    }
 
     @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
