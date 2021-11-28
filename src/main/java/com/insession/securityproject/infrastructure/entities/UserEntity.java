@@ -66,6 +66,8 @@ public class UserEntity {
         // So that you don't need to have it localy
         pepper = pepper == null ? "pepper" : pepper;
         return pepper;
+    }
+    
     public String getImageFile() {
         return imageFile;
     }
