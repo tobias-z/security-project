@@ -1,8 +1,10 @@
 package com.insession.securityproject.web.routes.pin;
 
+
 import com.insession.securityproject.api.services.AuthPinCodeService;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.IUserService;
+import com.insession.securityproject.domain.user.User;
 import com.insession.securityproject.domain.user.UserNotFoundException;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.domain.pincode.PinCodeChannel;
@@ -17,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/pin/email")
-public class Email extends RootServlet {
+@WebServlet("/pin/edit")
+public class Edit extends RootServlet {
 
     private final IUserService userService = new UserService(
             new UserRepository(DBConnection.getEmf())
@@ -26,9 +28,9 @@ public class Email extends RootServlet {
 
     @Override
     public void init() throws ServletException {
-        this.title = "Email PinCode";
+        this.title = "Edit PinCode";
         this.description = "PinCode validation from email";
-        setRolesAllowed(UserRole.NO_USER);
+        setRolesAllowed(UserRole.ADMIN);
     }
 
     @Override
@@ -36,7 +38,7 @@ public class Email extends RootServlet {
         if (req.getSession().getAttribute("pinCodeUsername") == null) {
             super.sendError(req, "You do not currently have a pin code that needs validating");
         }
-        return "/pin/email";
+        return "/pin/edit";
     }
 
     @Override
@@ -48,21 +50,15 @@ public class Email extends RootServlet {
 
             boolean isValidPinCode = new AuthPinCodeService().isValidPinCode(username, PinCodeChannel.EMAIL, pinCode);
             if (!isValidPinCode)
-                return "/pin/email";
-
-            setUserSessionVariables(session, username);
-            return "/";
-        } catch (UserNotFoundException e) {
-            return super.sendError(req, "Please try to login again. An error happened when trying to find your user");
+                return "/pin/edit";
+            User editedUser= (User) session.getAttribute("editedUser");
+            userService.edit(editedUser);
+            return "/users";
+        } catch (Exception e) {
+            return super.sendError(req, "Please try to edit again. An error happened when trying to find your user");
         }
     }
 
-    private void setUserSessionVariables(HttpSession session, String username) throws UserNotFoundException {
-        UserRole userRole = userService.getUserRole(username);
-        session.setAttribute("role", userRole);
-        session.setAttribute("userName", username);
-        session.removeAttribute("pinCodeUsername");
-    }
 
     private int getPinCode(HttpServletRequest req) {
         try {

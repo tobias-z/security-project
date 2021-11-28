@@ -31,10 +31,9 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         this.rolesAllowed = roles;
     }
 
-    protected String sendError(HttpServletRequest req, HttpServletResponse res, String message) throws ServletException, IOException {
+    protected String sendError(HttpServletRequest req, String message) throws ServletException, IOException {
         req.setAttribute("errorCode", 200);
         req.setAttribute("errorMessage", message);
-        req.getRequestDispatcher("/WEB-INF/routes/404.jsp").forward(req, res);
         return "/404";
     }
 
@@ -48,9 +47,14 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
         init();
 
         setRoleIfNotLoggedIN(req);
-        new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
 
-        String route = loader(req, resp);
+        String route;
+        boolean isAllowedOnPage = new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
+        if (!isAllowedOnPage)
+            route = sendError(req, "You are not allowed on that page");
+        else
+            route = loader(req, resp);
+
         req.setAttribute("title", title);
         req.setAttribute("description", description);
         req.setAttribute("content", "/WEB-INF/routes" + route + ".jsp");
@@ -72,9 +76,13 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         init();
-        new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
         ipDelayService.handleDelay(req.getRemoteAddr());
+        boolean isAllowedOnPage = new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
         req.changeSessionId();
+        if (!isAllowedOnPage) {
+            resp.sendRedirect(req.getContextPath() + "/404");
+            return;
+        }
         String redirectPath = action(req, resp);
         resp.sendRedirect(req.getContextPath() + redirectPath);
     }

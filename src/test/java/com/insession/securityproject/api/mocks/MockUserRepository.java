@@ -44,4 +44,19 @@ public class MockUserRepository implements IUserRepository {
     public void editUser(User user) {
 
     }
+
+    @Override
+    public void createUserFile(String username, String fileName) {
+
+    }
+
+    @Override
+    public String getUserImageFile(String username) {
+        return null;
+    }
+
+    @Override
+    public void deleteImageFile(String username) throws UserNotFoundException {
+
+    }
 }

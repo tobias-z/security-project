@@ -31,7 +31,7 @@ public class DeleteCommentAction extends ForumAction {
                 req.setAttribute("commentRemoved", "Successfully deleted comment");
                 return "/forum/" + topicId;
             } catch (InvalidKeysException | UserNotFoundException | InvalidUserException | CommentNotFoundException e) {
-                return sendError(req, resp, e.getMessage());
+                return sendError(req, e.getMessage());
             }
         }));
     }

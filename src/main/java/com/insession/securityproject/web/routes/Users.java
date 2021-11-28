@@ -61,23 +61,41 @@ public class Users extends RootServlet {
     @Override
     public String action(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(true);
+        session.removeAttribute("usertoedit");
         try {
             String usertodelete = req.getParameter("usertodelete");
-            System.out.println("Delete:"+usertodelete);
             String usertoedit = req.getParameter("usertoedit");
-            System.out.println("Edit:"+usertoedit);
+
             if (usertodelete!=null){
-                userService.deleteUserByUserName(usertodelete);
+                // if illegal characters or user not existing, post not from webside, terminate session and return to frontpage
+                if (!validateInput(usertodelete)||(!userService.userExists(usertodelete,"n/a"))){
+                    session.invalidate();
+                    return "/";
+                }
+                session.setAttribute("usertodelete", usertodelete);
+
+                String loggedInUser= (String) session.getAttribute("userName");
+                session.setAttribute("pinCodeUsername", loggedInUser);
+
+                User user=userService.getUserByUserName(loggedInUser);
+                userService.sendPinMail(user);
+
+                return "/pin/deleteuser";
+                //userService.deleteUserByUserName(usertodelete);
             }
             if (usertoedit!=null){
-                //userService.editUserName(usertoedit);
+                // if illegal characters or user not existing, post not from webside, terminate session and return to frontpage
+                if (!validateInput(usertoedit)||(!userService.userExists(usertoedit,"n/a"))){
+                    session.invalidate();
+                    return "/";
+                }
                 session.setAttribute("usertoedit", usertoedit);
                 return "/edituser";
             }
             return "/users";
         } catch (Exception e) {
-            session.setAttribute("signupError", e.getMessage());
-            System.out.println("catch");
+            session.setAttribute("Error ", e.getMessage());
+
             return "/users";
         }
     }

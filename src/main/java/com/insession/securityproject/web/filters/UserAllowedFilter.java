@@ -21,27 +21,30 @@ public class UserAllowedFilter {
         this.res = res;
     }
 
-    public void doFilter()
+    public boolean doFilter()
             throws IOException, ServletException {
         HttpSession session = req.getSession();
 
         UserRole userRole = (UserRole) session.getAttribute("role");
 
         if (userRole == null) {
-            sendError("You are not allowed here");
+            return sendError("You are not allowed here");
         }
 
         if (rolesAllowed.length == 0)
-            return;
+            return true;
 
         if (!Arrays.asList(rolesAllowed).contains(userRole))
-            sendError("You are not allowed on that page");
+            return sendError("You are not allowed on that page");
+
+        return true;
     }
 
-    private void sendError(String message) throws ServletException, IOException {
-        req.setAttribute("errorCode", 200);
-        req.setAttribute("errorMessage", message);
-        req.getRequestDispatcher("/WEB-INF/routes/404.jsp").forward(req, res);
+    private boolean sendError(String message) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        session.setAttribute("errorCode", 200);
+        session.setAttribute("errorMessage", message);
+        return false;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.insession.securityproject.web.routes;
 
+import com.insession.securityproject.api.services.NullValidatorService;
 import com.insession.securityproject.api.services.UserService;
 import com.insession.securityproject.domain.user.*;
 import com.insession.securityproject.infrastructure.DBConnection;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 import static com.insession.securityproject.domain.user.Whitelist.validateEmail;
 import static com.insession.securityproject.domain.user.Whitelist.validateInput;
@@ -52,6 +54,10 @@ public class Signup extends RootServlet {
             if (userService.userExists(username, email)) {
                 throw new UserExistsException("A user with that username or email already exists");
             }
+
+            // https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
+            // Usernames should be case-insensitive
+            username = username.toLowerCase();
             User user = new User(username, UserRole.USER, email, phone);
             userService.sendPinMail(user);
             userService.sendPinSMS(user);
@@ -88,6 +94,11 @@ public class Signup extends RootServlet {
     }
 
     private void validate(String username, String email, Integer phone, String password, String repeatedPassword) throws InvalidKeysException {
+        NullValidatorService.nullOrEmpty(username, "username", InvalidKeysException.class);
+        NullValidatorService.nullOrEmpty(email, "email", InvalidKeysException.class);
+        NullValidatorService.nullOrEmpty(password, "password", InvalidKeysException.class);
+        NullValidatorService.nullOrEmpty(repeatedPassword, "repeatedPassword", InvalidKeysException.class);
+
         String message = "Invalid input provided in field: ";
         if (!validateInput(username)) {
             //log
@@ -106,6 +117,12 @@ public class Signup extends RootServlet {
         }
         if (password.length() < 16)
             throw new InvalidKeysException("Password is too short... Please provide at least 16 characters");
+        // https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
+        // Max password length to protect against Long password dos attacks
+        if (password.length() > 64) {
+            logger.warn("too long password: " + password);
+            throw new InvalidKeysException("Password is too long");
+        }
         if (!password.equals(repeatedPassword)) {
             //log
             logger.warn("Wrong repeatedPassword input: " + repeatedPassword);

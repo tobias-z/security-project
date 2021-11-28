@@ -35,15 +35,17 @@ public class EditUser extends RootServlet {
 
     @Override
     public String loader(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username= (String) request.getSession(true).getAttribute("usertoedit");
+        HttpSession session = request.getSession(true);
+        String username= (String) session.getAttribute("usertoedit");
 
         try {
             User user=userService.getUserByUserName(username);
             request.setAttribute("usertoedit", user);
-        } catch (UserNotFoundException e) {
-            return "/users";
-        }
+            session.removeAttribute("EditUserError");
 
+        } catch (UserNotFoundException e) {
+            session.setAttribute("EditUserError", e.getMessage());
+        }
         return "/edituser";
     }
 
@@ -53,7 +55,6 @@ public class EditUser extends RootServlet {
         try {
             String userToEdit= (String) req.getSession(true).getAttribute("usertoedit");
             User originalUser=userService.getUserByUserName(userToEdit);
-            System.out.println(originalUser.getUsername());
             String email = req.getParameter("email");
             int phone = getPhone(req);
             String roleString=req.getParameter("role");
@@ -71,10 +72,15 @@ public class EditUser extends RootServlet {
             if ((originalUser.getUserRole()==UserRole.ADMIN)&&(editedUser.getUserRole()==UserRole.USER)){
                 throw new InvalidKeysException("You are not allowed to change user status to USER");
             }
+            session.setAttribute("editedUser",editedUser);
+            String loggedInUser= (String) session.getAttribute("userName");
+            session.setAttribute("pinCodeUsername", loggedInUser);
 
-            userService.edit(editedUser);
+            User user=userService.getUserByUserName(loggedInUser);
+            userService.sendPinMail(user);
 
-            return "/users";
+
+            return "/pin/edit";
         } catch (InvalidKeysException | UserExistsException  | UserNotFoundException e) {
             session.setAttribute("EditUserError", e.getMessage());
             return "/edituser";
