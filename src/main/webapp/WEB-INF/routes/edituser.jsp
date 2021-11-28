@@ -27,7 +27,7 @@
                 <c:if test="${requestScope.usertoedit.userRole =='USER'}">
                      <option >User</option>
                 </c:if>
-                <option value="ADMIN">Admin</option>
+                <option>Admin</option>
             </select>
         </div>
 
