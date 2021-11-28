@@ -2,7 +2,9 @@
 
 <section class="d-flex justify-content-center align-items-center" style="flex-direction: column">
     <h1>Greetings ${sessionScope.userName}</h1>
+    <img src="${pageContext.request.contextPath}/images/${requestScope.imagefile}" alt="" height="200" width="200">
     <h3>What do you have on your mind?</h3>
+
 
     <div class="col-4" style="width: 700px">
         <jsp:include page="../components/topic-form.jsp"/>
