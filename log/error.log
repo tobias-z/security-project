@@ -13,3 +13,5 @@
 2021-11-22 10:35:57 ERROR TopicRepository:134 - User: t1 tried to remove comment with id: 8 but was not allowed
 2021-11-23 10:07:28 ERROR TopicRepository:112 - User: t1 tried to remove topic with id: 3 but was not allowed
 2021-11-23 10:07:30 ERROR TopicRepository:134 - User: t1 tried to remove comment with id: 8 but was not allowed
+2021-11-28 14:17:53 ERROR TopicRepository:112 - User: t1 tried to remove topic with id: 3 but was not allowed
+2021-11-28 14:17:54 ERROR TopicRepository:134 - User: t1 tried to remove comment with id: 9 but was not allowed

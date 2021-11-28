@@ -35,7 +35,7 @@ public class DeleteUser extends RootServlet {
     @Override
     public String loader(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getSession().getAttribute("pinCodeUsername") == null) {
-            super.sendError(req, resp, "You do not currently have a pin code that needs validating");
+            super.sendError(req, "You do not currently have a pin code that needs validating");
         }
         return "/pin/deleteuser";
     }
@@ -55,7 +55,7 @@ public class DeleteUser extends RootServlet {
             userService.deleteUserByUserName(userToDelete);
             return "/users";
         } catch (Exception e) {
-            return super.sendError(req, resp, "Please try to deleting again. An error happened when trying to find your user");
+            return super.sendError(req, "Please try to deleting again. An error happened when trying to find your user");
         }
     }
 
