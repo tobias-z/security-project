@@ -1,6 +1,9 @@
 package com.insession.securityproject.domain.user;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,13 +21,13 @@ public class Whitelist {
         allChars.add('_');
         allChars.add('-');
 
-        for(char cu = 'A'; cu <= 'Z'; cu++) {
+        for (char cu = 'A'; cu <= 'Z'; cu++) {
             allChars.add(cu);
         }
         for (char cl = 'a'; cl <= 'z'; cl++) {
             allChars.add(cl);
         }
-        for(char i = '0'; i <= '9'; i++) {
+        for (char i = '0'; i <= '9'; i++) {
             allChars.add(i);
         }
         return allChars;
@@ -55,25 +58,14 @@ public class Whitelist {
 
     // File extension validation
     private static boolean validateImageFileExtensions(String check) {
-
-        // Algorithm from
-        // https://www.geeksforgeeks.org/how-to-validate-image-file-extension-using-regular-expression/
-
-        // Regex to check valid image file extension.
-        String regex  = "([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)";
-        // Compile the ReGex
+        String regex = "([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(check);
 
-        if (!m.matches()) {
-            return false;
-        }
-        return true;
+        return m.matches();
     }
 
     public static boolean validateImageFile(String check) {
         return validateImageFileExtensions(check);
     }
-
-
 }

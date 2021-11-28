@@ -19,4 +19,12 @@ public interface IUserRepository {
     void deleteUserByUserName(String username) throws UserNotFoundException;
 
     void editUser(User user);
+
+    void createUserFile(String username, String fileName);
+
+    String getUserImageFile(String username);
+
+    void deleteImageFile(String username) throws UserNotFoundException;
+
+
 }

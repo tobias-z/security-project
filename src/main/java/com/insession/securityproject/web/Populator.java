@@ -14,7 +14,8 @@ public class Populator {
         try {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM UserEntity").executeUpdate();
-            em.persist(new UserEntity("j", "", "jensgelbek@gmail.com", 42733385, UserRole.ADMIN));
+            System.out.println("hej");
+            em.persist(new UserEntity("p", "", "cph-pa127@cphbusiness.dk", 50300192, UserRole.ADMIN));
             em.getTransaction().commit();
         } finally {
             em.close();

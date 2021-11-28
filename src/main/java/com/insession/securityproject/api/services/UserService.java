@@ -188,4 +188,14 @@ public class UserService implements IUserService {
     public void edit(User user) {
         repository.editUser(user);
     }
+
+    @Override
+    public String getUserImageFile(String username) {
+        return null;
+    }
+
+    @Override
+    public void deleteImageFile(String username) throws UserNotFoundException {
+        repository.deleteImageFile(username);
+    }
 }

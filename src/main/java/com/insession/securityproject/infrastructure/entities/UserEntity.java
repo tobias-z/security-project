@@ -31,6 +31,10 @@ public class UserEntity {
     @Column(name = "role")
     private UserRole role;
 
+    @Column(name = "imageFile")
+    private String imageFile;
+
+
     @OneToMany(mappedBy = "user")
     @JoinColumn(name = "topics")
     private List<TopicEntity> topicEntities;
@@ -62,6 +66,12 @@ public class UserEntity {
         // So that you don't need to have it localy
         pepper = pepper == null ? "pepper" : pepper;
         return pepper;
+    public String getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
     }
 
     public boolean verifyPassword(String pw){

@@ -1,6 +1,7 @@
 package com.insession.securityproject.infrastructure.repositories;
 
 import com.insession.securityproject.domain.user.*;
+import com.insession.securityproject.infrastructure.DBConnection;
 import com.insession.securityproject.infrastructure.cache.saved.UserCredentials;
 import com.insession.securityproject.infrastructure.entities.UserEntity;
 
@@ -131,4 +132,51 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    @Override
+    public void createUserFile(String username, String fileName) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            UserEntity userEntity = em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            em.getTransaction().begin();
+            userEntity.setImageFile(fileName);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            System.out.println("Could not set fileName");
+        } finally {
+            em.close();
+        }
+
+    }
+
+    @Override
+    public String getUserImageFile(String username) {
+        String filename = "";
+        EntityManager em = emf.createEntityManager();
+        try {
+            UserEntity userEntity = em.createQuery("Select u from UserEntity u where u.userName=:username", UserEntity.class)
+                    .setParameter("username", username )
+                    .getSingleResult();
+            em.getTransaction().begin();
+            filename = userEntity.getImageFile();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            System.out.println("Could not set fileName");
+        } finally {
+            em.close();
+        }
+     return filename;
+    }
+
+    @Override
+    public void deleteImageFile(String username) throws UserNotFoundException {
+
+    }
+
+
 }
+
+
+
+
