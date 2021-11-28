@@ -23,11 +23,11 @@
         </div>
         <div class="col-12 mt-3">
             <label for="role" class="form-label">Role</label>
-            <select class="form-select" aria-label="select role" name="role" id="role" value=${requestScope.usertoedit.userRole} >
+            <select class="form-select" aria-label="select role" name="role" id="role" value="${requestScope.usertoedit.userRole}" >
                 <c:if test="${requestScope.usertoedit.userRole =='USER'}">
                      <option >User</option>
                 </c:if>
-                <option value="ADMIN">Admin</option>
+                <option>Admin</option>
             </select>
         </div>
 
