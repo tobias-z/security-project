@@ -3,8 +3,6 @@ package com.insession.securityproject.api.services;
 import com.insession.securityproject.domain.pincode.PinCodeChannel;
 import com.insession.securityproject.infrastructure.cache.Redis;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class AuthPinCodeService {
@@ -26,7 +24,7 @@ public class AuthPinCodeService {
         if (thePinCode == null || !thePinCode.equals(pinCode))
             return false;
 
-        Redis.getConnection().pop(key).close();
+        Redis.getConnection().remove(key).close();
         return true;
     }
 
@@ -34,7 +32,7 @@ public class AuthPinCodeService {
         return () -> {
             try {
                 TimeUnit.MINUTES.sleep(5);
-                Redis.getConnection().pop(getRedisString(username, channel));
+                Redis.getConnection().remove(getRedisString(username, channel));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

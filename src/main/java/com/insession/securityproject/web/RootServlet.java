@@ -1,5 +1,6 @@
 package com.insession.securityproject.web;
 
+import com.insession.securityproject.api.services.IPDelayService;
 import com.insession.securityproject.domain.user.UserRole;
 import com.insession.securityproject.web.filters.UserAllowedFilter;
 import com.insession.securityproject.web.widgets.Navbar;
@@ -12,11 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public abstract class RootServlet extends HttpServlet implements IRoute {
-
     protected UserRole[] rolesAllowed;
     protected String title;
     protected String description;
     protected String cacheControl;
+
+    private static final IPDelayService ipDelayService = new IPDelayService(3);
 
     public RootServlet() {
         this.rolesAllowed = new UserRole[] {};
@@ -74,6 +76,7 @@ public abstract class RootServlet extends HttpServlet implements IRoute {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         init();
+        ipDelayService.handleDelay(req.getRemoteAddr());
         boolean isAllowedOnPage = new UserAllowedFilter(this.rolesAllowed, req, resp).doFilter();
         req.changeSessionId();
         if (!isAllowedOnPage) {

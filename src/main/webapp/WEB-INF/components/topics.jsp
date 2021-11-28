@@ -14,7 +14,7 @@
             <c:forEach var="topic" items="${requestScope.topics}">
                 <li class="list-group-item">
                     <div class="d-flex justify-content-between">
-                        <strong><p>${topic.user.username} - ${topic.createdAt}</p></strong>
+                        <strong><p><c:out value="${topic.user.username} - ${topic.createdAt}" /></p></strong>
                         <c:if test="${topic.user.username.equals(sessionScope.userName) || sessionScope.role.equals(ADMIN)}">
                             <form id="deleteTopic" method="post"
                                   action="${pageContext.request.contextPath}/actions/delete-topic">
@@ -24,7 +24,7 @@
                             </form>
                         </c:if>
                     </div>
-                    <p>${topic.message}</p>
+                    <p><c:out value="${topic.message}" /></p>
 
                     <hr/>
                     <div class="d-flex justify-content-end">

@@ -4,8 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import redis.clients.jedis.Jedis;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class RedisConnection {
-    private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new Gson();
     private final Jedis jedis;
 
     public RedisConnection(Jedis jedis) {
@@ -25,8 +29,13 @@ public class RedisConnection {
         return GSON.fromJson(value, clazz);
     }
 
-    public RedisConnection pop(String key) {
-        jedis.del(key);
+    public RedisConnection remove(String... keys) {
+        jedis.del(keys);
+        return this;
+    }
+
+    public RedisConnection removeAll() {
+        jedis.flushDB();
         return this;
     }
 
