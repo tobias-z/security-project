@@ -113,7 +113,7 @@ public class UserService implements IUserService {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
                         new PhoneNumber("+45" + user.getPhone()),
-                        new PhoneNumber("+13202881854"),
+                        new PhoneNumber(System.getenv("TWILIO_NUMBER")),
                         "Your one time Pin Code is: " + pinCode)
                 .create();
     }
