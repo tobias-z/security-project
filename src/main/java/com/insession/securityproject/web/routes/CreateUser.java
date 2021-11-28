@@ -51,7 +51,7 @@ public class CreateUser extends RootServlet {
                 throw new UserExistsException("A user with that username or email already exists");
             }
             UserRole role=UserRole.USER;
-            if (req.getParameter("role")=="ADMIN") role= UserRole.ADMIN;
+            if (req.getParameter("role").equals("ADMIN")) role= UserRole.ADMIN;
             User user = new User(username, role, email, phone);
             userService.create(user, password);
 

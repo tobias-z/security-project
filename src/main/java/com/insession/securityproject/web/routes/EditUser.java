@@ -58,7 +58,8 @@ public class EditUser extends RootServlet {
             String email = req.getParameter("email");
             int phone = getPhone(req);
             String roleString=req.getParameter("role");
-            UserRole role=((roleString.equals("ADMIN")) ? UserRole.ADMIN : UserRole.USER);
+            UserRole role=((roleString.equals("Admin")) ? UserRole.ADMIN : UserRole.USER);
+
             User editedUser=new User(userToEdit,role,email,phone);
             validate( email, phone);
 

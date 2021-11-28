@@ -52,6 +52,7 @@ public class Edit extends RootServlet {
             if (!isValidPinCode)
                 return "/pin/edit";
             User editedUser= (User) session.getAttribute("editedUser");
+            System.out.println("edit: "+editedUser.getUserRole());
             userService.edit(editedUser);
             return "/users";
         } catch (Exception e) {
